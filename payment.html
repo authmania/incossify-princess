@@ -180,14 +180,11 @@
     reported = true;
     render();
 
-    const pkg = PACKAGES[selectedPkg] || PACKAGES[user.package] || PACKAGES.starterkit;
     const isWA = config.socialLink === "wa";
     const social = isWA
       ? (config.whatsapp_link || "https://wa.me/2340000000000")
       : (config.telegram_link || TELEGRAM_FALLBACK);
-    const socialClean = social.split("?")[0];
-    const txt = "Hello Admin!%0A%0AI have just made my payment for the " + pkg.name + " registration.%0A%0AMy username: " + (user ? user.username : "") + "%0APayment reference: " + (reference || "");
-    window.open(socialClean + (socialClean.includes("?") ? "&" : "?") + "text=" + txt, "_blank", "noopener");
+    window.open(social, "_blank", "noopener");
     // Account is NOT activated here — the admin confirms the payment and activates the account.
   });
 
