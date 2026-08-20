@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Receipt — Incossify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="app" id="receiptPage">
+  <div class="bg" style="opacity:0.4;"></div>
+  <div class="app-body" style="padding-top:2rem;">
+
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+      <a href="dashboard.html" class="back-btn glass">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+      </a>
+      <h1 style="font-size:1.5rem;font-weight:800;">Receipt</h1>
+    </div>
+
+    <div id="receiptBox"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1.25rem;">
+      <button class="btn btn-glass" id="printBtn" style="padding:0.875rem;">Print</button>
+      <button class="btn btn-aqua" id="downloadBtn" style="padding:0.875rem;">Download</button>
+    </div>
+
+  </div>
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<script type="module">
+  import { getCurrentUser, renderNav, fmt, esc } from "./assets/app.js";
+
+  const user = getCurrentUser();
+  if (!user) { window.location.href = "login.html"; throw new Error("redirect"); }
+
+  let receipt = null;
+  try { receipt = JSON.parse(localStorage.getItem("incossify_receipt") || "null"); } catch (_) {}
+
+  function row(k, v, hl) {
+    return `<div class="receipt-row"><span class="k">${esc(k)}</span><span class="v ${hl ? "hl" : ""}">${esc(v)}</span></div>`;
+  }
+
+  const box = document.getElementById("receiptBox");
+
+  if (!receipt) {
+    document.getElementById("receiptPage").style.paddingBottom = "0";
+    box.innerHTML = `
+      <div style="text-align:center;padding:3rem 0;">
+        <p style="color:var(--foreground);opacity:0.7;">No recent withdrawal found.</p>
+        <a href="withdraw.html" style="display:inline-block;margin-top:1rem;color:var(--primary);font-weight:600;">Make a withdrawal →</a>
+      </div>`;
+    document.querySelector("#receiptPage .app-body").style.paddingTop = "3rem";
+    document.querySelector("#receiptPage .app-body > .back-btn") && (document.querySelector("#receiptPage .app-body > div").style.display = "none");
+    document.getElementById("printBtn").style.display = "none";
+    document.getElementById("downloadBtn").style.display = "none";
+  } else {
+    const d = new Date(receipt.date);
+    box.innerHTML = `
+      <div class="card glass-strong shadow-elegant" style="padding:1.5rem;">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <div style="height:4rem;width:4rem;border-radius:999px;background:var(--gradient-aqua);display:grid;place-items:center;box-shadow:var(--shadow-aqua);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:2rem;width:2rem;color:var(--primary-foreground);"><path d="M20 6 9 17l-5-5"></path></svg>
+          </div>
+          <p style="margin-top:1rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.25em;color:var(--primary);font-weight:700;">Successful</p>
+          <p style="margin-top:0.5rem;font-size:1.875rem;font-weight:800;">${fmt(receipt.amount)}</p>
+          <p style="margin-top:0.25rem;font-size:0.75rem;color:var(--foreground);opacity:0.6;">Sent to ${esc(receipt.bankName)}</p>
+        </div>
+        <div class="receipt-divider">
+          ${row("Transaction ID", receipt.transactionId)}
+          ${row("Reference Number", receipt.referenceNumber)}
+          ${row("Amount", fmt(receipt.amount))}
+          ${row("Wallet Used", receipt.wallet)}
+          ${row("Bank", receipt.bankName)}
+          ${row("Account Name", receipt.accountName)}
+          ${row("Account Number", receipt.accountNumber)}
+          ${row("Date", d.toLocaleString())}
+          ${row("Status", receipt.status, true)}
+        </div>
+        <div style="margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;color:var(--foreground);opacity:0.6;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>
+          <span style="font-size:0.75rem;">Powered by Incossify</span>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById("printBtn").addEventListener("click", () => window.print());
+  document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!receipt) return;
+    const lines = [
+      "INCOSSIFY WITHDRAWAL RECEIPT",
+      "==========================",
+      "Transaction ID:   " + receipt.transactionId,
+      "Reference Number: " + receipt.referenceNumber,
+      "Date:             " + new Date(receipt.date).toLocaleString(),
+      "Status:           " + receipt.status,
+      "Wallet Used:      " + receipt.wallet,
+      "Amount:           " + fmt(receipt.amount),
+      "Bank:             " + receipt.bankName,
+      "Account Name:     " + receipt.accountName,
+      "Account Number:   " + receipt.accountNumber,
+      "",
+      "Thank you for using Incossify."
+    ].join("\n");
+    const blob = new Blob([lines], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "incossify-" + receipt.transactionId + ".txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  renderNav("withdraw");
+</script>
+</body>
+</html>

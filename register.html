@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Create Account — Incossify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div style="position:absolute;inset:0;background:var(--gradient-hero);opacity:0.7;z-index:-1;"></div>
+  <div class="rain" style="position:absolute;inset:0;opacity:0.2;z-index:-1;"></div>
+  <div style="position:absolute;top:0;right:0;height:30rem;width:30rem;border-radius:999px;background:var(--primary);opacity:0.2;filter:blur(3rem);z-index:-1;"></div>
+
+  <header class="wrap-md auth-header">
+    <a href="index.html" class="logo"><img src="assets/logo-CUooZ1Ch.png" alt="Incossify" draggable="false"><span class="name">Incossify</span></a>
+    <a href="index.html" class="back">← Back home</a>
+  </header>
+
+  <main class="wrap-md" style="max-width:32rem;padding-bottom:4rem;">
+    <form class="card glass-strong shadow-elegant" id="registerForm" style="padding:1.5rem 2rem;">
+      <h1 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;">Create Account</h1>
+      <p style="margin-top:0.25rem;font-size:0.875rem;color:var(--foreground);opacity:0.65;">Already registered? <a href="login.html" style="color:var(--primary);font-weight:600;">Sign in</a></p>
+
+      <div class="field-error" id="registerError" style="display:none;margin-top:1rem;"></div>
+
+      <div style="margin-top:1.5rem;display:grid;gap:1rem;">
+        <label class="block">
+          <span class="field-label">Full Name</span>
+          <input required class="field" id="fullName" placeholder="Enter your full name">
+        </label>
+        <label class="block">
+          <span class="field-label">Username</span>
+          <input required class="field" id="username" placeholder="Choose a username">
+        </label>
+        <label class="block">
+          <span class="field-label">Email Address</span>
+          <input required type="email" class="field" id="email" placeholder="you@example.com">
+        </label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <label class="block">
+            <span class="field-label">Country</span>
+            <select class="field" id="country">
+              <option value="Nigeria" class="bg-background" style="background:var(--background);color:var(--foreground);">Nigeria</option>
+              <option value="Ghana" style="background:var(--background);color:var(--foreground);">Ghana</option>
+              <option value="Kenya" style="background:var(--background);color:var(--foreground);">Kenya</option>
+              <option value="South Africa" style="background:var(--background);color:var(--foreground);">South Africa</option>
+              <option value="United Kingdom" style="background:var(--background);color:var(--foreground);">United Kingdom</option>
+              <option value="United States" style="background:var(--background);color:var(--foreground);">United States</option>
+              <option value="Canada" style="background:var(--background);color:var(--foreground);">Canada</option>
+              <option value="Other" style="background:var(--background);color:var(--foreground);">Other</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="field-label">Phone Number</span>
+            <input required type="tel" class="field" id="phone" placeholder="08012345678">
+          </label>
+        </div>
+        <label class="block">
+          <span class="field-label">Password</span>
+          <div style="position:relative;">
+            <input required type="password" minlength="4" class="field pr-11" id="password" placeholder="Minimum 4 characters">
+            <button type="button" class="pass-toggle" id="passToggle" aria-label="Show password" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--foreground);opacity:0.55;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </label>
+      </div>
+
+      <div class="field-note" style="margin-top:1.5rem;text-align:center;">
+        <p style="font-size:0.875rem;font-weight:600;color:var(--foreground);opacity:0.85;">Create your account and get your ₦37,000 welcome bonus instantly.</p>
+      </div>
+
+      <button type="submit" class="btn btn-aqua btn-block" id="registerBtn" style="margin-top:1.75rem;padding:1rem;">
+        Create Account
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </button>
+      <p style="margin-top:1rem;font-size:0.6875rem;text-align:center;color:var(--foreground);opacity:0.55;">By signing up you agree to Incossify's Terms &amp; Privacy Policy.</p>
+    </form>
+  </main>
+</div>
+
+<script type="module">
+  import { getUsers, saveUsers, saveUser, setActive } from "./assets/app.js";
+
+  // password toggle
+  const pass = document.getElementById("password");
+  const passToggle = document.getElementById("passToggle");
+  passToggle.addEventListener("click", () => {
+    const show = pass.type === "password";
+    pass.type = show ? "text" : "password";
+  });
+
+  // pre-select package from URL (?package=starterkit | apex)
+  const params = new URLSearchParams(location.search);
+  if (params.get("package")) sessionStorage.setItem("incossify_package", params.get("package"));
+
+  const form = document.getElementById("registerForm");
+  const submitBtn = document.getElementById("registerBtn");
+  const errBox = document.getElementById("registerError");
+
+  function showError(msg) {
+    errBox.textContent = msg;
+    errBox.style.display = "block";
+  }
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    submitBtn.innerHTML = on ? 'Creating account…' : 'Create Account <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    errBox.style.display = "none";
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const country = document.getElementById("country").value;
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value;
+    const pkg = sessionStorage.getItem("incossify_package") || "free";
+    const referral = params.get("ref");
+
+    if (!fullName || !username || !email || !phone || !password) {
+      showError("Please fill in all fields before proceeding.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError("Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 4) {
+      showError("Password must be at least 4 characters.");
+      return;
+    }
+    if (phone.length < 10) {
+      showError("Please enter a valid phone number.");
+      return;
+    }
+
+    const users = getUsers();
+    if (users.some(u => u.email === email)) {
+      showError("An account with this email already exists. Please sign in.");
+      return;
+    }
+    if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+      showError("That username is already taken.");
+      return;
+    }
+
+    const reference = "INCOS-" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+    const user = {
+      fullName, username, email, country, phone, password,
+      package: pkg,
+      package_name: pkg === "apex" ? "Apex Package" : pkg === "starterkit" ? "StarterKit Package" : "Free",
+      payment_reference: reference,
+      referral: referral || null,
+      referralCode: username.toUpperCase(),
+      totalBalance: 0, taskBalance: 0, salesBalance: 0, referralEarnings: 0, referrals: 0,
+      joinedAt: new Date().toISOString()
+    };
+
+    users.push(user);
+    saveUsers(users);
+    saveUser(user);
+    setActive(false);
+
+    setLoading(true);
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 600);
+  });
+</script>
+</body>
+</html>

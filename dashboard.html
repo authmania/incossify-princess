@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Dashboard — Incossify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="app">
+  <div class="bg"></div>
+  <div class="app-body">
+
+    <header class="user-head">
+      <div class="who">
+        <div class="av"><div id="avatarLetter">?</div></div>
+        <div>
+          <p class="small">Welcome back</p>
+          <p class="name" id="fullName">…</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;position:relative;">
+        <button class="icon-btn" aria-label="Notifications">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Balance hero -->
+    <div style="position:relative;margin-top:1.5rem;">
+      <div style="position:absolute;inset:-0.75rem;background:var(--gradient-aqua);border-radius:2rem;filter:blur(2rem);opacity:0.25;"></div>
+      <div class="balance-card">
+        <div class="rel">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <p style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.2em;opacity:0.8;font-weight:600;">Total Balance</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;opacity:0.8;"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>
+          </div>
+          <p style="margin-top:0.5rem;font-size:2.25rem;font-weight:800;font-variant-numeric:tabular-nums;" id="totalBalance">₦0</p>
+          <div style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div class="mini-card" style="background:rgb(255 255 255 / 0.15);backdrop-filter:blur(8px);">
+              <h4 style="color:var(--aqua-foreground);opacity:0.75;">Daily Tasks</h4>
+              <p id="taskBalance" style="color:var(--aqua-foreground);">₦0</p>
+            </div>
+            <div class="mini-card" style="background:rgb(255 255 255 / 0.15);backdrop-filter:blur(8px);">
+              <h4 style="color:var(--aqua-foreground);opacity:0.75;">Sales</h4>
+              <p id="salesBalance" style="color:var(--aqua-foreground);">₦0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="quick-grid" style="margin-top:1.5rem;">
+      <a href="withdraw.html" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg></div><span>Withdraw</span></a>
+      <a href="profile.html" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><span>Profile</span></a>
+      <a href="#sharesSection" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></div><span>Tasks</span></a>
+      <a href="#musicSection" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></div><span>Music</span></a>
+    </div>
+
+    <!-- Task sections (bobby-new: each task is its own section) -->
+    <section style="margin-top:2rem;" id="taskSectionShares">
+      <div class="sec-head">
+        <h2>Inn Tasks</h2>
+      </div>
+      <div id="sharesCard"><p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p></div>
+    </section>
+
+    <section style="margin-top:1.5rem;" id="taskSectionMusic">
+      <div class="sec-head">
+        <!-- <h2>Listening to Music</h2> -->
+      </div>
+      <div id="musicCard"><p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p></div>
+    </section>
+
+    <!-- Claim & Earn -->
+    <section style="margin-top:2rem;" id="sharesSection">
+      <div class="sec-head">
+        <h2>Claim &amp; Earn</h2>
+      </div>
+      <div style="display:grid;gap:0.75rem;" id="sharesList">
+        <p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p>
+      </div>
+    </section>
+
+    <!-- Listen & Earn -->
+    <section style="margin-top:1.5rem;" id="musicSection">
+      <div class="sec-head">
+        <h2>Listen &amp; Earn</h2>
+      </div>
+      <div style="display:grid;gap:0.75rem;" id="musicList">
+        <p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p>
+      </div>
+    </section>
+
+  </div>
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<!-- All tasks done modal -->
+<div id="doneModal">
+  <div class="done-box">
+    <div class="done-ic">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;"><path d="M20 6 9 17l-5-5"></path></svg>
+    </div>
+    <h3>All tasks completed for today!</h3>
+    <p>You have completed the free tasks for the day. Come back tomorrow, or activate your account to keep earning.</p>
+    <button id="doneOk" type="button">OK</button>
+    <button id="doneActivate" type="button">Activate your account</button>
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div id="taskModal">
+  <div class="tm-inner">
+    <div class="tm-top">
+      <button id="tmClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button>
+      <div class="tm-signal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l6-6 4 4 8-8"></path></svg>
+        <span id="tmNetwork">Incossify Network</span>
+      </div>
+    </div>
+
+    <!-- Music player view -->
+    <div id="tmMusicView">
+      <div class="tm-art" id="tmArt">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+      </div>
+      <h2 id="tmSongTitle">Song</h2>
+      <p id="tmArtist">Artist</p>
+      <div class="tm-progress"><div class="tm-progress-bar" id="tmProgress"></div></div>
+      <div class="tm-time-row"><span id="tmCurTime">0:00</span><span id="tmDurTime">0:00</span></div>
+      <button id="tmPlayPause" class="tm-play" type="button" aria-label="Play/Pause">
+        <svg id="tmPlayIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 6 4.5z"></path></svg>
+        <svg id="tmPauseIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+      </button>
+      <!-- Earnings appear after a few seconds -->
+      <div class="tm-earn" id="tmEarnBox" style="display:none;"><span>Earnings</span><strong id="tmEarn">₦0</strong></div>
+    </div>
+
+    <!-- Shares view -->
+    <div id="tmShareView" style="display:none;">
+      <div class="tm-avatar" id="tmAvatar"></div>
+      <h2 id="tmTitle">Inn Task</h2>
+      <p id="tmState">Claiming…</p>
+      <div class="tm-timer" id="tmTimer">00:00</div>
+      <div class="tm-earn"><span>Earnings</span><strong id="tmEarn2">₦0</strong></div>
+    </div>
+
+    <div class="tm-actions">
+      <button id="tmEnd" class="tm-end" type="button">End</button>
+    </div>
+    <audio id="tmAudio" preload="auto" playsinline></audio>
+  </div>
+</div>
+
+<div class="toast" id="toastBar"></div>
+
+<script type="module">
+  import { getCurrentUser, getUsers, saveUsers, saveUser, showActivateGate, renderNav, toast, fmt, esc } from "./assets/app.js";
+
+  // ── Tasks (2 tasks, bobby-new structure) ──
+  const TASKS = [
+    { id: "shares", title: "Inn Task",            desc: "Claim 100 shares at once",                        reward: 50000, icon: "share", music: false },
+    { id: "music",  title: "Listening to Music", desc: "Music stream bonus",                              reward: 5000,  icon: "music", music: true, songReward: 2000 },
+  ];
+  const ICONS = {
+    share: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>',
+    music: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+  };
+  const MUSIC_SRC = "assets/music-sample.mpeg";
+  // 4 daily-rotating sets of 4 songs — the set changes every day (real Nigerian tracks, 30s previews via iTunes Search API)
+  const MUSIC_SETS = [
+    [
+      { id: "s1", artist: "Wizkid",   song: "Essence (feat. Tems)", term: "wizkid essence tems",    src: "assets/music-sample.mpeg" },
+      { id: "s2", artist: "Burna Boy",song: "No Fit Vex",          term: "no fit vex",             src: "assets/music-sample.mpeg" },
+      { id: "s3", artist: "Davido",   song: "B4 B4",               term: "davido b4 b4",           src: "assets/music-sample.mpeg" },
+      { id: "s4", artist: "Asake",    song: "Gratitude",           term: "asake gratitude",        src: "assets/music-sample.mpeg" },
+    ],
+    [
+      { id: "s5", artist: "Rema",           song: "Calm Down",                term: "rema calm down",          src: "assets/music-sample.mpeg" },
+      { id: "s6", artist: "CKay",           song: "Love Nwantiti (Remix)",    term: "ckay love nwantiti",      src: "assets/music-sample.mpeg" },
+      { id: "s7", artist: "Fireboy DML",    song: "Peru",                     term: "fireboy peru",            src: "assets/music-sample.mpeg" },
+      { id: "s8", artist: "Ayra Starr",     song: "Rush",                     term: "ayra star rush",          src: "assets/music-sample.mpeg" },
+    ],
+    [
+      { id: "s9",  artist: "Omah Lay", song: "Soso",            term: "omah lay soso",     src: "assets/music-sample.mpeg" },
+      { id: "s10", artist: "Tems",     song: "Free Mind",       term: "tems free mind",    src: "assets/music-sample.mpeg" },
+      { id: "s11", artist: "Kizz Daniel", song: "Buga (Lo Lo Lo)", term: "kizz daniel buga", src: "assets/music-sample.mpeg" },
+      { id: "s12", artist: "Young Jonn", song: "Dada",          term: "young jonn dada",   src: "assets/music-sample.mpeg" },
+    ],
+    [
+      { id: "s13", artist: "Shallipopi", song: "Obapluto",            term: "shallipopi",           src: "assets/music-sample.mpeg" },
+      { id: "s14", artist: "BNXN",       song: "GWAGWALADA",          term: "bnxn gwagwalada",      src: "assets/music-sample.mpeg" },
+      { id: "s15", artist: "Victony",    song: "Soweto",              term: "victony soweto",       src: "assets/music-sample.mpeg" },
+      { id: "s16", artist: "Ruger",      song: "Bounce",              term: "ruger bounce",         src: "assets/music-sample.mpeg" },
+    ],
+  ];
+  function todaySetIndex() { return Math.floor(Date.now() / 86400000) % MUSIC_SETS.length; }
+  let MUSIC = MUSIC_SETS[todaySetIndex()];
+  let musicUrls = {}; // song id -> 30s preview URL
+  let musicArt = {};  // song id -> album artwork URL
+
+  // Claim & Earn — 2 daily Inn Shares, ₦1,000 each, one claim per day
+  const SHARES = [
+    { id: "sh1", label: "Inn Share 1", sub: "Daily share bonus", reward: 1000 },
+    { id: "sh2", label: "Inn Share 2", sub: "Daily share bonus", reward: 1000 },
+  ];
+
+  function todayKey() { return new Date().toISOString().slice(0, 10); }
+
+  const user = getCurrentUser();
+  if (!user) { window.location.href = "login.html"; throw new Error("redirect"); }
+
+  let tasks = {};
+  try { tasks = JSON.parse(localStorage.getItem("incossify_tasks") || "{}"); } catch (_) {}
+
+  function taskStatus(taskId) {
+    const day = tasks[todayKey()] || {};
+    return day[taskId] || "available";
+  }
+
+  function persistTaskState() {
+    localStorage.setItem("incossify_tasks", JSON.stringify(tasks));
+    const users = getUsers();
+    const idx = users.findIndex(u => u.email === user.email);
+    if (idx >= 0) { users[idx] = user; saveUsers(users); }
+  }
+
+  function allDailyDone() {
+    const day = tasks[todayKey()] || {};
+    const ids = ["sh1", "sh2", ...MUSIC.map(s => s.id)];
+    return ids.every(id => day[id] === "completed");
+  }
+
+  function showDoneModal() {
+    if (!allDailyDone()) return;
+    document.getElementById("doneModal").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  document.getElementById("doneOk").addEventListener("click", () => {
+    document.getElementById("doneModal").classList.remove("active");
+    document.body.style.overflow = "";
+  });
+  document.getElementById("doneActivate").addEventListener("click", () => {
+    window.location.href = "payment.html";
+  });
+
+  // ── Task modal (bobby-new full screen) ──
+  const taskModal = document.getElementById("taskModal");
+  const tmAudio = document.getElementById("tmAudio");
+  let tmEarnInterval = null, tmTimerInterval = null, tmEnded = false;
+  let tmMusicMode = false;
+  let tmCurrentTask = null;
+  let tmCurrentSong = null;
+  let tmEarnShown = false;
+
+  function openTaskModal(task, song) {
+    tmCurrentTask = task;
+    tmCurrentSong = song || null;
+    tmMusicMode = task.music || !!song;
+    tmEnded = false;
+    tmEarnShown = false;
+
+    const endBtn = document.getElementById("tmEnd");
+    endBtn.textContent = "End";
+    endBtn.classList.remove("done");
+    endBtn.style.display = "inline-block";
+
+    // switch views
+    document.getElementById("tmMusicView").style.display = tmMusicMode ? "block" : "none";
+    document.getElementById("tmShareView").style.display = tmMusicMode ? "none" : "block";
+    document.getElementById("tmNetwork").textContent = tmMusicMode ? "Incossify Music" : "Incossify Network";
+
+    // reset controls
+    document.getElementById("tmEarnBox").style.display = "none";
+    document.getElementById("tmEarn").textContent = "₦0";
+    document.getElementById("tmProgress").style.width = "0%";
+    document.getElementById("tmCurTime").textContent = "0:00";
+    document.getElementById("tmDurTime").textContent = "0:00";
+    document.getElementById("tmPlayIcon").style.display = "block";
+    document.getElementById("tmPauseIcon").style.display = "none";
+
+    if (tmMusicMode && song) {
+      document.getElementById("tmSongTitle").textContent = song.song;
+      document.getElementById("tmArtist").textContent = song.artist;
+      tmAudio.src = musicUrls[song.id] || song.src;
+      const art = musicArt[song.id];
+      document.getElementById("tmArt").innerHTML = art
+        ? `<img src="${esc(art)}" alt="${esc(song.song)}" onerror="this.parentElement.classList.add('fallback')">`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+    } else if (tmMusicMode) {
+      document.getElementById("tmSongTitle").textContent = task.title;
+      document.getElementById("tmArtist").textContent = "Incossify";
+      tmAudio.src = MUSIC_SRC;
+      document.getElementById("tmArt").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+    } else {
+      document.getElementById("tmTitle").textContent = task.title;
+      document.getElementById("tmAvatar").innerHTML = ICONS[task.icon];
+      document.getElementById("tmState").textContent = "Claiming…";
+      document.getElementById("tmTimer").textContent = "00:00";
+      document.getElementById("tmEarn2").textContent = "₦0";
+    }
+
+    taskModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    if (tmMusicMode) {
+      tmAudio.load();
+      const p = tmAudio.play();
+      if (p) p.catch(() => {});
+      // show earnings after a few seconds of playback
+      setTimeout(() => {
+        if (tmEnded) return;
+        tmEarnShown = true;
+        document.getElementById("tmEarnBox").style.display = "block";
+        startTaskEarnings(task, "tmEarn");
+      }, 3500);
+    } else {
+      setTimeout(() => {
+        if (tmEnded) return;
+        document.getElementById("tmState").textContent = "Claiming shares";
+        startTaskEarnings(task, "tmEarn2");
+      }, 1200);
+    }
+  }
+
+  // music player: progress + time updates
+  tmAudio.addEventListener("timeupdate", () => {
+    if (!tmMusicMode) return;
+    const cur = tmAudio.currentTime || 0;
+    const dur = tmAudio.duration || 0;
+    if (dur) document.getElementById("tmProgress").style.width = (cur / dur * 100).toFixed(1) + "%";
+    document.getElementById("tmCurTime").textContent = fmtTime(cur);
+    if (dur) document.getElementById("tmDurTime").textContent = fmtTime(dur);
+  });
+
+  function fmtTime(s) {
+    s = Math.floor(s || 0);
+    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  document.getElementById("tmPlayPause").addEventListener("click", () => {
+    if (tmAudio.paused) {
+      tmAudio.play().catch(() => {});
+      document.getElementById("tmPlayIcon").style.display = "none";
+      document.getElementById("tmPauseIcon").style.display = "block";
+    } else {
+      tmAudio.pause();
+      document.getElementById("tmPlayIcon").style.display = "block";
+      document.getElementById("tmPauseIcon").style.display = "none";
+    }
+  });
+
+  function taskReward(task) { return task.songReward || task.reward; }
+
+  function startTaskEarnings(task, earnId) {
+    const MAX_EARN = taskReward(task);
+    const DURATION = 8000;
+    const start = Date.now();
+
+    tmEarnInterval = setInterval(() => {
+      const progress = Math.min((Date.now() - start) / DURATION, 1);
+      document.getElementById(earnId).textContent = "₦" + Math.floor(MAX_EARN * progress).toLocaleString();
+      if (progress >= 1) {
+        clearInterval(tmEarnInterval);
+        tmEarnInterval = null;
+        completeTask(task);
+      }
+    }, 50);
+
+    if (!tmMusicMode) {
+      let sec = 0;
+      tmTimerInterval = setInterval(() => {
+        sec++;
+        document.getElementById("tmTimer").textContent = String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0");
+      }, 1000);
+    }
+  }
+
+  function completeTask(task) {
+    if (tmEnded) return;
+    tmEnded = true;
+    tmAudio.pause();
+    const endBtn = document.getElementById("tmEnd");
+    endBtn.textContent = "Done";
+    endBtn.classList.add("done");
+
+    const earn = taskReward(task);
+    if (tmMusicMode) {
+      document.getElementById("tmEarnBox").style.display = "block";
+      document.getElementById("tmEarn").textContent = "₦" + earn.toLocaleString();
+      document.getElementById("tmPlayIcon").style.display = "block";
+      document.getElementById("tmPauseIcon").style.display = "none";
+    } else {
+      document.getElementById("tmState").textContent = "Completed ✓";
+    }
+
+    const day = tasks[todayKey()] || {};
+    const completedId = tmMusicMode && tmCurrentSong ? tmCurrentSong.id : task.id;
+    day[completedId] = "completed";
+    tasks[todayKey()] = day;
+
+    user.taskBalance = Number(user.taskBalance || 0) + earn;
+    user.totalBalance = Number(user.totalBalance || 0) + earn;
+    saveUser(user);
+    document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
+    document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
+    persistTaskState();
+    renderTasks();
+    if (tmMusicMode) renderMusic();
+    toast("+₦" + earn.toLocaleString() + " earned!");
+    if (tmMusicMode) showDoneModal();
+  }
+
+  function closeTaskModal() {
+    tmEnded = true;
+    clearInterval(tmEarnInterval); tmEarnInterval = null;
+    clearInterval(tmTimerInterval); tmTimerInterval = null;
+    tmAudio.pause();
+    taskModal.classList.remove("active");
+    document.body.style.overflow = "";
+    tmMusicMode = false;
+  }
+
+  document.getElementById("tmClose").addEventListener("click", closeTaskModal);
+  document.getElementById("tmEnd").addEventListener("click", closeTaskModal);
+
+  // ── Render task cards ──
+  function taskCardHtml(t) {
+    const st = taskStatus(t.id);
+    const hint = t.music ? "Start" : (st === "completed" ? "Done" : "Start");
+    return `
+    <div class="task-card featured" data-id="${t.id}">
+      <span class="task-ic">${ICONS[t.icon]}</span>
+      <span class="task-info">
+        <span class="desc">${esc(t.desc)}</span>
+      </span>
+      <span class="task-reward ${st === "completed" ? "done" : ""}">₦${t.reward.toLocaleString()}<span class="start-hint">${hint} →</span></span>
+    </div>`;
+  }
+
+  function renderTasks() {
+    TASKS.forEach(task => {
+      const holder = document.getElementById(task.id + "Card");
+      if (!holder) return;
+      holder.innerHTML = taskCardHtml(task);
+      const card = holder.querySelector("[data-id]");
+      card.addEventListener("click", () => {
+        showActivateGate();
+      });
+    });
+  }
+
+  function renderShares() {
+    const list = document.getElementById("sharesList");
+    list.innerHTML = SHARES.map(s => {
+      const claimed = taskStatus(s.id) === "completed";
+      return `
+      <div class="music-card glass-strong" data-share="${s.id}">
+        <div class="music-cover">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>
+        </div>
+        <div class="music-info">
+          <b>${esc(s.label)}</b>
+          <span>${esc(s.sub)}</span>
+        </div>
+        <button class="music-play ${claimed ? "played" : ""}" type="button" data-sharebtn="${s.id}">${claimed ? "Claimed ✓" : "Claim ₦" + s.reward.toLocaleString()}</button>
+      </div>`;
+    }).join("");
+
+    list.querySelectorAll("[data-sharebtn]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const share = SHARES.find(s => s.id === btn.dataset.sharebtn);
+        if (!share) return;
+        if (taskStatus(share.id) === "completed") {
+          if (allDailyDone()) showDoneModal(); else toast("Already claimed today.");
+          return;
+        }
+        const day = tasks[todayKey()] || {};
+        day[share.id] = "completed";
+        tasks[todayKey()] = day;
+
+        user.taskBalance = Number(user.taskBalance || 0) + share.reward;
+        user.totalBalance = Number(user.totalBalance || 0) + share.reward;
+        saveUser(user);
+        document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
+        document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
+        persistTaskState();
+        renderShares();
+        toast("+₦" + share.reward.toLocaleString() + " claimed!");
+        showDoneModal();
+      });
+    });
+  }
+
+  async function loadMusicUrls() {
+    await Promise.all(MUSIC.map(async s => {
+      try {
+        const res = await fetch("https://itunes.apple.com/search?term=" + encodeURIComponent(s.term) + "&entity=song&limit=1");
+        const j = await res.json();
+        const r = j.results && j.results[0];
+        if (r) {
+          if (r.previewUrl) musicUrls[s.id] = r.previewUrl;
+          if (r.artworkUrl100) musicArt[s.id] = r.artworkUrl100.replace("/100x100bb.jpg", "/300x300bb.jpg");
+        }
+      } catch (_) {}
+    }));
+    renderMusic();
+  }
+
+  function renderMusic() {
+    const list = document.getElementById("musicList");
+    list.innerHTML = MUSIC.map(s => {
+      const played = taskStatus(s.id) === "completed";
+      const art = musicArt[s.id];
+      return `
+      <div class="music-card glass-strong" data-song="${s.id}">
+        <div class="music-cover">${art
+          ? `<img src="${esc(art)}" alt="${esc(s.song)}" loading="lazy" onerror="this.parentElement.classList.add('fallback')">`
+          : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`}</div>
+        <div class="music-info">
+          <b>${esc(s.artist)}</b>
+          <span>${esc(s.song)}</span>
+        </div>
+        <button class="music-play ${played ? "played" : ""}" type="button">${played ? "Played ✓" : "Play"}</button>
+      </div>`;
+    }).join("");
+
+    list.querySelectorAll(".music-card").forEach(card => {
+      card.querySelector(".music-play").addEventListener("click", () => {
+        const song = MUSIC.find(s => s.id === card.dataset.song);
+        if (!song) return;
+        if (taskStatus(song.id) === "completed") {
+          if (allDailyDone()) showDoneModal(); else toast("Already played today.");
+          return;
+        }
+        const musicTask = TASKS.find(t => t.id === "music");
+        openTaskModal(musicTask, song);
+      });
+    });
+  }
+
+  function init() {
+    document.getElementById("avatarLetter").textContent = (user.fullName || "?").charAt(0).toUpperCase();
+    document.getElementById("fullName").textContent = user.fullName || "Member";
+    document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
+    document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
+    document.getElementById("salesBalance").textContent = fmt(user.salesBalance);
+
+    renderTasks();
+    renderShares();
+    renderMusic();
+    loadMusicUrls();
+    renderNav("dashboard");
+  }
+
+  init();
+</script>
+</body>
+</html>

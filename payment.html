@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Complete Your Payment — Incossify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div style="position:absolute;inset:0;background:var(--gradient-hero);opacity:0.7;z-index:-1;"></div>
+  <div class="rain" style="position:absolute;inset:0;opacity:0.2;z-index:-1;"></div>
+
+  <header class="wrap auth-header" style="height:5rem;">
+    <a href="index.html" class="logo"><img src="assets/logo-CUooZ1Ch.png" alt="Incossify" draggable="false"><span class="name" style="font-size:1.35rem;">Incossify</span></a>
+    <span style="display:inline-flex;align-items:center;gap:0.375rem;font-size:0.75rem;font-weight:600;color:var(--foreground);opacity:0.7;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;color:var(--primary);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path></svg>
+      Secure checkout
+    </span>
+  </header>
+
+  <main class="wrap-md" style="max-width:32rem;padding-bottom:4rem;">
+    <div class="card glass-strong shadow-elegant" style="padding:1.5rem 2rem;">
+      <h1 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;">Complete Your Payment</h1>
+      <p style="margin-top:0.25rem;font-size:0.875rem;color:var(--foreground);opacity:0.65;" id="payIntro">Loading your payment details…</p>
+
+      <div class="field-error" id="payError" style="display:none;margin-top:1rem;"></div>
+
+      <!-- Package selector (free accounts) -->
+      <div id="pkgSection" style="display:none;margin-top:1.5rem;">
+        <p style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--foreground);opacity:0.65;margin-bottom:0.75rem;">Choose your package</p>
+        <div style="display:grid;gap:0.75rem;">
+          <button type="button" class="pay-pkg" data-pkg="starterkit">
+            <span><b>StarterKit Package</b><span class="tg">Perfect for new earners starting today</span></span>
+            <span class="pr text-gradient-aqua" data-price="9500">₦9,500</span>
+          </button>
+          <button type="button" class="pay-pkg" data-pkg="apex">
+            <span><b>Apex Package</b><span class="tg">Highest daily payouts and full access</span></span>
+            <span class="pr text-gradient-aqua" data-price="15000">₦15,000</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div id="amountSection" style="display:none;margin-top:1.5rem;">
+        <div style="display:flex;align-items:stretch;gap:0.75rem;">
+          <div style="flex:1;border-radius:1rem;border:1px solid oklch(80% 0.15 160 / 0.4);background:oklch(80% 0.15 160 / 0.15);padding:1rem;text-align:center;">
+            <p style="font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:oklch(85% 0.13 160);">Amount</p>
+            <p style="margin-top:0.25rem;font-size:1.5rem;font-weight:800;color:oklch(85% 0.13 160);" id="amountVal">—</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank transfer note -->
+      <div class="card glass" style="margin-top:1rem;padding:1rem;font-size:0.875rem;color:var(--foreground);opacity:0.75;">
+        Make a bank transfer of <b style="color:var(--foreground);" id="noteAmount">—</b> to the account below, then tap <b style="color:var(--foreground);">"I have paid already"</b> to send your proof. Your <b style="color:var(--primary);">100% welcome bonus</b> is credited once your payment is confirmed.
+      </div>
+
+      <!-- Bank details -->
+      <div id="bankSection" style="display:none;margin-top:1.5rem;border-radius:1rem;box-shadow:var(--shadow-elegant);border:1px solid color-mix(in oklab, var(--primary) 30%, transparent);padding:1rem;">
+        <p style="font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--primary);">Bank transfer details</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+          <div class="pay-bank-row"><div style="min-width:0;"><p class="lbl">Bank name</p><p class="val" id="bankNameVal">—</p></div></div>
+          <div class="pay-bank-row">
+            <div style="min-width:0;"><p class="lbl">Account number</p><p class="val" id="accNumVal">—</p></div>
+            <button type="button" class="pay-copy" data-copy="accNumVal">Copy</button>
+          </div>
+          <div class="pay-bank-row"><div style="min-width:0;"><p class="lbl">Account name</p><p class="val" id="accNameVal">—</p></div></div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-aqua btn-block" id="paidBtn" style="display:none;margin-top:0.75rem;padding:1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+        I have paid already
+      </button>
+
+      <!-- Reported -->
+      <div id="reportedBox" style="display:none;margin-top:1rem;border-radius:1rem;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:1rem;font-size:0.875rem;">
+        <p style="display:flex;align-items:center;gap:0.5rem;font-weight:600;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;color:var(--primary);"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> Payment reported</p>
+        <p style="margin-top:0.375rem;color:var(--foreground);opacity:0.75;">Send your proof of payment on <span id="socialName" style="font-weight:600;color:var(--foreground);">Telegram</span> to <a href="https://t.me/zabalinah" target="_blank" rel="noreferrer" id="tgLink" style="color:var(--primary);font-weight:600;text-decoration:underline;">@zabalinah</a> with your username. Your account is activated as soon as it is confirmed — this page will take you to your dashboard automatically.</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toastBar"></div>
+
+<script type="module">
+  import { loadConfig, getUsers, saveUsers, getCurrentUser } from "./assets/app.js";
+
+  const TELEGRAM_FALLBACK = "https://t.me/zabalinah";
+  const PACKAGES = {
+    starterkit: { name: "StarterKit Package", price: 9500, bonus: 9500, daily: "7,900 / £3.45 daily" },
+    apex: { name: "Apex Package", price: 15000, bonus: 15000, daily: "16,000 / £6.50 daily" }
+  };
+
+  const params = new URLSearchParams(location.search);
+  const reference = params.get("ref");
+
+  const intro = document.getElementById("payIntro");
+  const tgEl = document.getElementById("tgLink");
+
+  let user = null;
+  let config = {};
+  let selectedPkg = null;
+  let reported = false;
+
+  function fmt(n) { return "₦" + Number(n || 0).toLocaleString(); }
+
+  function findUser() {
+    if (!reference) return null;
+    return getUsers().find(u => u.payment_reference === reference) || null;
+  }
+
+  function render() {
+    // Show the package selector only when no package is chosen yet
+    const pkgId = selectedPkg || (user && user.package !== "free" ? user.package : null);
+    const pkg = pkgId ? PACKAGES[pkgId] : null;
+    const amount = pkg ? pkg.price : 0;
+
+    document.getElementById("pkgSection").style.display = pkgId ? "none" : "block";
+    document.querySelectorAll(".pay-pkg").forEach(b => b.classList.toggle("active", b.dataset.pkg === pkgId));
+
+    document.getElementById("amountSection").style.display = pkg ? "block" : "none";
+    if (pkg) {
+      document.getElementById("amountVal").textContent = fmt(amount);
+      document.getElementById("noteAmount").textContent = fmt(amount);
+      document.getElementById("bankSection").style.display = "block";
+      document.getElementById("paidBtn").style.display = "inline-flex";
+    }
+
+    document.getElementById("bankNameVal").textContent = config.bank_name || "—";
+    document.getElementById("accNumVal").textContent = config.account_number || "—";
+    document.getElementById("accNameVal").textContent = config.account_name || "—";
+
+    // use the active social (socialLink: "tg" | "wa")
+    const isWA = config.socialLink === "wa";
+    const socialBase = isWA
+      ? (config.whatsapp_link || "https://wa.me/2340000000000")
+      : (config.telegram_link || TELEGRAM_FALLBACK);
+    tgEl.href = socialBase.split("?")[0];
+    tgEl.textContent = isWA
+      ? (config.whatsapp_link ? config.whatsapp_link.replace("https://wa.me/", "").split("?")[0] : "WhatsApp")
+      : (config.telegram_link ? config.telegram_link.replace("https://t.me/", "@").split("?")[0] : "@zabalinah");
+    document.getElementById("socialName").textContent = isWA ? "WhatsApp" : "Telegram";
+
+    document.getElementById("reportedBox").style.display = reported ? "block" : "none";
+
+    intro.textContent = (user && user.fullName ? user.fullName + ", " : "") + "activate your " + (pkg ? pkg.name : "package") + " to unlock your dashboard.";
+  }
+
+  document.querySelectorAll(".pay-pkg").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedPkg = btn.dataset.pkg;
+      document.querySelectorAll(".pay-pkg").forEach(b => b.classList.toggle("active", b === btn));
+      if (user) {
+        user.package = selectedPkg;
+        user.package_name = PACKAGES[selectedPkg].name;
+        const users = getUsers();
+        const idx = users.findIndex(u => u.email === user.email);
+        if (idx >= 0) { users[idx] = user; saveUsers(users); }
+      }
+      render();
+    });
+  });
+
+  document.querySelectorAll(".pay-copy").forEach(b => {
+    b.addEventListener("click", () => {
+      const el = document.getElementById(b.dataset.copy);
+      navigator.clipboard.writeText(el.textContent).then(() => { b.textContent = "Copied!"; setTimeout(() => b.textContent = "Copy", 1500); }).catch(() => {});
+    });
+  });
+
+  document.getElementById("paidBtn").addEventListener("click", () => {
+    reported = true;
+    render();
+
+    const pkg = PACKAGES[selectedPkg] || PACKAGES[user.package] || PACKAGES.starterkit;
+    const isWA = config.socialLink === "wa";
+    const social = isWA
+      ? (config.whatsapp_link || "https://wa.me/2340000000000")
+      : (config.telegram_link || TELEGRAM_FALLBACK);
+    const socialClean = social.split("?")[0];
+    const txt = "Hello Admin!%0A%0AI have just made my payment for the " + pkg.name + " registration.%0A%0AMy username: " + (user ? user.username : "") + "%0APayment reference: " + (reference || "");
+    window.open(socialClean + (socialClean.includes("?") ? "&" : "?") + "text=" + txt, "_blank", "noopener");
+    // Account is NOT activated here — the admin confirms the payment and activates the account.
+  });
+
+  async function init() {
+    config = await loadConfig();
+
+    user = findUser();
+    if (!user) {
+      // fall back to the logged-in account (e.g. coming from the dashboard gate)
+      const cur = getCurrentUser();
+      if (cur) user = cur;
+    }
+    if (user) {
+      reported = !!user.payment_reported;
+      selectedPkg = (user.package && user.package !== "free") ? user.package : null;
+    }
+    render();
+  }
+
+  init();
+</script>
+</body>
+</html>

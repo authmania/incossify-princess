@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incossify — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/logo-CUooZ1Ch.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  /* admin extras */
+  .admin-tabs button { border-radius: 999px; padding: 0.6rem 1.25rem; font-size: 0.875rem; font-weight: 700; transition: background 0.2s; }
+  .admin-tabs button.active { background: var(--gradient-aqua); color: var(--primary-foreground); box-shadow: var(--shadow-aqua); }
+  .admin-tabs button:not(.active) { color: var(--foreground); opacity: 0.75; }
+  .field-row { display: flex; gap: 10px; align-items: stretch; }
+  .field-row .save { border-radius: 0.75rem; }
+  .link-status { font-size: 0.8rem; margin-top: 0.5rem; min-height: 1.2em; color: oklch(85% 0.13 160); }
+  .link-status.error { color: oklch(75% 0.15 25); }
+  .toggle-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: rgb(255 255 255 / 0.025); border: 1px solid var(--border); border-radius: 16px; padding: 14px 18px; margin-bottom: 16px; }
+  .toggle-label { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .toggle-label small { font-weight: 400; color: var(--foreground); opacity: 0.4; font-size: 11px; }
+  .toggle-switch { position: relative; width: 48px; height: 26px; flex-shrink: 0; cursor: pointer; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; inset: 0; background: rgb(255 255 255 / 0.12); border-radius: 999px; transition: 0.3s; cursor: pointer; }
+  .toggle-slider::before { content: ""; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+  .toggle-switch input:checked + .toggle-slider { background: oklch(72% 0.21 302); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+  .toggle-status { font-size: 12px; font-weight: 700; min-width: 44px; color: var(--foreground); opacity: 0.4; }
+  .toggle-status.active { color: oklch(85% 0.13 160); }
+  .toggle-status.inactive { color: oklch(75% 0.15 25); }
+  .current-label { font-size: 0.78rem; color: var(--foreground); opacity: 0.5; margin-bottom: 0.4rem; font-weight: 500; }
+  .current-value { font-size: 0.85rem; word-break: break-all; background: rgb(255 255 255 / 0.04); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 10px; font-family: ui-monospace, monospace; }
+  .admin-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .social-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgb(255 255 255 / 0.04); border: 1px solid var(--border); border-radius: 14px; padding: 6px; }
+  .social-opt { border-radius: 10px; padding: 0.7rem; font-size: 0.85rem; font-weight: 700; color: var(--foreground); opacity: 0.55; transition: all 0.2s; }
+  .social-opt.active { background: var(--gradient-aqua); color: var(--primary-foreground); opacity: 1; box-shadow: var(--shadow-aqua); }
+  @media (max-width: 640px) { .admin-grid-2 { grid-template-columns: 1fr; } .field-row { flex-direction: column; } .field-row .save { width: 100%; } }
+</style>
+</head>
+<body>
+
+<!-- ── Login ── -->
+<div id="loginOverlay" style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:color-mix(in oklab, var(--background) 96%, transparent);padding:1.25rem;">
+  <div class="card glass-strong shadow-elegant" style="width:100%;max-width:420px;padding:2.5rem 2rem;text-align:center;">
+    <img src="assets/logo-CUooZ1Ch.png" alt="Incossify" style="width:64px;height:64px;object-fit:contain;border-radius:18px;margin:0 auto 1.25rem;display:block;">
+    <h2 style="font-size:1.6rem;font-weight:800;">Admin <span style="color:var(--primary);">Access</span></h2>
+    <p style="font-size:0.875rem;color:var(--foreground);opacity:0.6;margin-top:0.25rem;margin-bottom:1.5rem;">Enter the admin password to continue</p>
+    <input type="password" id="passwordInput" class="field" placeholder="Password" autocomplete="current-password">
+    <div class="login-error" id="loginError" style="font-size:0.84rem;color:oklch(75% 0.15 25);margin:0.6rem 0;min-height:1.2em;"></div>
+    <button class="btn btn-aqua btn-block" id="loginBtn" style="padding:0.9rem;">Enter Dashboard</button>
+  </div>
+</div>
+
+<!-- ── Admin Shell ── -->
+<div id="adminShell" style="display:none;">
+  <div style="position:relative;min-height:100vh;background:var(--background);color:var(--foreground);">
+    <div style="position:absolute;inset:0;background:var(--gradient-hero);opacity:0.4;z-index:-1;"></div>
+
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="inner">
+        <a href="index.html" class="brand"><img src="assets/logo-CUooZ1Ch.png" alt="Incossify"><span>Admin</span></a>
+        <button class="btn btn-aqua save-all" id="saveAllBtn" type="button" style="display:none;padding:0.5rem 1.1rem;font-size:0.8rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:0.875rem;width:0.875rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          Save Changes
+        </button>
+      </div>
+    </header>
+
+    <!-- Body -->
+    <div class="admin-body">
+      <div style="margin-top:1.5rem;display:grid;gap:1.25rem;">
+
+        <!-- Payment Account -->
+        <div class="admin-card glass-strong">
+          <div class="hd"><div class="ic"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 2l9 7v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg></div><h2>Payment Account Details</h2></div>
+          <div style="display:grid;gap:0.875rem;">
+            <label class="block"><span class="field-label">Bank Name</span><input type="text" class="field" id="bankNameInput" placeholder="e.g. Opay"></label>
+            <label class="block"><span class="field-label">Account Name</span><input type="text" class="field" id="accountNameInput" placeholder="e.g. INCOSSIFY LTD"></label>
+            <label class="block"><span class="field-label">Account Number</span><input type="text" class="field" id="accountNumberInput" placeholder="e.g. 0123456789"></label>
+          </div>
+        </div>
+
+        <!-- Payment Links -->
+        <div class="admin-card glass-strong">
+          <div class="hd"><div class="ic"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></div><h2>Payment Link Settings</h2></div>
+
+          <div class="toggle-row">
+            <div class="toggle-label">Enable Payment Links <small>(Use payment links instead of bank transfer)</small></div>
+            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
+              <span class="toggle-status" id="toggleStatusDisplay">OFF</span>
+              <label class="toggle-switch"><input type="checkbox" id="usePaymentLinkToggle"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+
+          <div style="height:1px;background:var(--border);margin:1rem 0;"></div>
+
+          <label class="block">
+            <span class="current-label">StarterKit Payment Link (₦9,500)</span>
+            <div class="current-value" id="currentPaymentLink1Display">Loading...</div>
+            <input type="url" class="field" id="paymentLink1Input" placeholder="https://pay.squadco.com/incossifykit" style="margin-top:0.5rem;">
+          </label>
+
+          <div style="height:1px;background:var(--border);margin:1rem 0;"></div>
+
+          <label class="block">
+            <span class="current-label">Apex Payment Link (₦15,000)</span>
+            <div class="current-value" id="currentPaymentLink2Display">Loading...</div>
+            <input type="url" class="field" id="paymentLink2Input" placeholder="https://pay.squadco.com/incossifyape" style="margin-top:0.5rem;">
+          </label>
+        </div>
+
+        <!-- Social Settings -->
+        <div class="admin-card glass-strong">
+          <div class="hd"><div class="ic"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><h2>Social Settings</h2></div>
+          <span class="field-label" style="display:block;margin-bottom:0.75rem;">Use Social</span>
+          <div class="social-pick">
+            <button type="button" class="social-opt active" data-social="tg">Telegram</button>
+            <button type="button" class="social-opt" data-social="wa">WhatsApp</button>
+          </div>
+          <div class="link-status" id="socialStatus"></div>
+        </div>
+
+        <!-- Telegram -->
+        <div class="admin-card glass-strong">
+          <div class="hd"><div class="ic"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><h2>Telegram Redirect Link</h2></div>
+          <span class="current-label">Current link</span>
+          <div class="current-value" id="currentLinkDisplay" style="margin-bottom:0.5rem;">Loading…</div>
+          <input type="url" class="field" id="tgLinkInput" placeholder="https://t.me/your_channel_or_group">
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="admin-card glass-strong">
+          <div class="hd"><div class="ic"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.074-.149-.668-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></div><h2>WhatsApp Redirect Link</h2></div>
+          <span class="current-label">Current link</span>
+          <div class="current-value" id="currentWALinkDisplay" style="margin-bottom:0.5rem;">Loading…</div>
+          <input type="url" class="field" id="waLinkInput" placeholder="https://wa.me/2348012345678">
+        </div>
+
+      </div>
+
+      <!-- Logout footer -->
+      <div style="display:flex;justify-content:center;margin-top:1.5rem;">
+        <button class="signout" id="logoutBtn" style="display:inline-flex;align-items:center;gap:0.375rem;font-size:0.8rem;font-weight:600;color:var(--foreground);opacity:0.7;border:1px solid var(--border);border-radius:999px;padding:0.55rem 1.4rem;background:rgb(255 255 255 / 0.04);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1rem;width:1rem;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastBar"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc }
+                                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey:            "AIzaSyDrnmtx0LkfMKytzTKQZwXCg1JKZXiJmtU",
+        authDomain:        "glamour-28049.firebaseapp.com",
+        projectId:         "glamour-28049",
+        storageBucket:     "glamour-28049.firebasestorage.app",
+        messagingSenderId: "22177815395",
+        appId:             "1:22177815395:web:2ca7caa2b1626299675156"
+    };
+
+    const ADMIN_PASSWORD = "incossifyadmin";
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app, "(default)");
+
+    const SESSION_KEY = "incossify_admin_authed";
+    const CONFIG_DOC  = doc(db, "account", "incossifyprincess");
+
+    // ── Toast ──
+    function showToast(msg) {
+        const bar = document.getElementById("toastBar");
+        bar.textContent = msg;
+        bar.classList.add("show");
+        setTimeout(() => bar.classList.remove("show"), 2200);
+    }
+
+    // ── Login / Logout ──
+    function revealAdmin() {
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("adminShell").style.display   = "block";
+        loadConfig();
+    }
+
+    function checkSession() {
+        if (sessionStorage.getItem(SESSION_KEY) === "1") revealAdmin();
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+        const val = document.getElementById("passwordInput").value;
+        const err = document.getElementById("loginError");
+        if (val === ADMIN_PASSWORD) {
+            sessionStorage.setItem(SESSION_KEY, "1");
+            err.textContent = "";
+            revealAdmin();
+        } else {
+            err.textContent = "Incorrect password. Try again.";
+            document.getElementById("passwordInput").value = "";
+        }
+    });
+
+    document.getElementById("passwordInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") document.getElementById("loginBtn").click();
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        sessionStorage.removeItem(SESSION_KEY);
+        location.reload();
+    });
+
+    checkSession();
+
+    // ── Toggle Display Update ──
+    function updateToggleDisplay(enabled) {
+        const statusEl = document.getElementById("toggleStatusDisplay");
+        if (enabled) {
+            statusEl.textContent = "ON";
+            statusEl.className = "toggle-status active";
+        } else {
+            statusEl.textContent = "OFF";
+            statusEl.className = "toggle-status inactive";
+        }
+    }
+
+    // ── Load Config ──
+    async function loadConfig() {
+        try {
+            const snap = await getDoc(CONFIG_DOC);
+            const data = snap.exists() ? snap.data() : {};
+
+            const tgLink = data.telegram_link || "";
+            document.getElementById("currentLinkDisplay").textContent = tgLink || "Not set";
+            document.getElementById("tgLinkInput").value = tgLink;
+
+            const bankName = data.bank_name || "";
+            const accountName = data.account_name || "";
+            const accountNumber = data.account_number || "";
+            document.getElementById("bankNameInput").value = bankName;
+            document.getElementById("accountNameInput").value = accountName;
+            document.getElementById("accountNumberInput").value = accountNumber;
+
+            const paymentLink1 = data.paymentLink1 || "";
+            document.getElementById("currentPaymentLink1Display").textContent = paymentLink1 || "Not set";
+            document.getElementById("paymentLink1Input").value = paymentLink1;
+
+            const paymentLink2 = data.paymentLink2 || "";
+            document.getElementById("currentPaymentLink2Display").textContent = paymentLink2 || "Not set";
+            document.getElementById("paymentLink2Input").value = paymentLink2;
+
+            const usePaymentLink = data.usePaymentLink || false;
+            document.getElementById("usePaymentLinkToggle").checked = usePaymentLink;
+            updateToggleDisplay(usePaymentLink);
+
+            // WhatsApp link
+            const waLink = data.whatsapp_link || "";
+            document.getElementById("currentWALinkDisplay").textContent = waLink || "Not set";
+            document.getElementById("waLinkInput").value = waLink;
+
+            // Social picker (which social link is active)
+            const socialLink = data.socialLink || "tg";
+            document.querySelectorAll(".social-opt").forEach(b => b.classList.toggle("active", b.dataset.social === socialLink));
+
+            // set baseline for dirty tracking
+            SAVE_FIELDS.forEach(f => {
+                baseline[f.key] = document.getElementById(f.inputId).value;
+            });
+            refreshSaveButton();
+
+        } catch (err) {
+            console.error("loadConfig error:", err);
+            // gracefully clear the "Loading..." placeholders
+            ["currentLinkDisplay","currentWALinkDisplay","currentPaymentLink1Display","currentPaymentLink2Display"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && /^Loading/.test(el.textContent.trim())) el.textContent = "Not set";
+            });
+        }
+    }
+
+    // ── Toggle Change Handler ──
+    document.getElementById("usePaymentLinkToggle").addEventListener("change", async function() {
+        const enabled = this.checked;
+        this.disabled = true;
+
+        try {
+            await setDoc(CONFIG_DOC, { usePaymentLink: enabled }, { merge: true });
+            updateToggleDisplay(enabled);
+            showToast(enabled ? "✅ Payment links enabled!" : "❌ Payment links disabled!");
+        } catch (err) {
+            this.checked = !enabled;
+            updateToggleDisplay(!enabled);
+            showToast("❌ Failed to save toggle state.");
+            console.error("Toggle save error:", err);
+        } finally {
+            this.disabled = false;
+        }
+    });
+
+    // ── Social toggle (Telegram / WhatsApp) ──
+    document.querySelectorAll(".social-opt").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const val = btn.dataset.social;
+            const status = document.getElementById("socialStatus");
+            document.querySelectorAll(".social-opt").forEach(b => b.classList.toggle("active", b === btn));
+            status.textContent = "";
+            try {
+                await setDoc(CONFIG_DOC, { socialLink: val }, { merge: true });
+                status.textContent = "✅ Active social: " + (val === "tg" ? "Telegram" : "WhatsApp");
+                showToast("✅ Social link set to " + (val === "tg" ? "Telegram" : "WhatsApp"));
+            } catch (err) {
+                status.textContent = "❌ Save failed — check Firestore rules.";
+                status.className = "link-status error";
+                console.error("Social save error:", err);
+            }
+        });
+    });
+
+    // ── Universal Save (dirty tracking) ──
+    const SAVE_FIELDS = [
+        { key: "bank_name",       inputId: "bankNameInput",       displayId: null,                    label: "Bank name",         url: false },
+        { key: "account_name",    inputId: "accountNameInput",    displayId: null,                    label: "Account name",      url: false },
+        { key: "account_number",  inputId: "accountNumberInput",  displayId: null,                    label: "Account number",    url: false },
+        { key: "paymentLink1",    inputId: "paymentLink1Input",   displayId: "currentPaymentLink1Display", label: "StarterKit link", url: true },
+        { key: "paymentLink2",    inputId: "paymentLink2Input",   displayId: "currentPaymentLink2Display", label: "Apex link",       url: true },
+        { key: "telegram_link",   inputId: "tgLinkInput",         displayId: "currentLinkDisplay",    label: "Telegram link",     url: true  },
+        { key: "whatsapp_link",   inputId: "waLinkInput",         displayId: "currentWALinkDisplay",  label: "WhatsApp link",     url: true  },
+    ];
+
+    let baseline = {};
+
+    function getDirtyFields() {
+        return SAVE_FIELDS.filter(f => {
+            const val = document.getElementById(f.inputId).value.trim();
+            return val !== (baseline[f.key] || "");
+        });
+    }
+
+    function refreshSaveButton() {
+        const saveAllBtn = document.getElementById("saveAllBtn");
+        saveAllBtn.style.display = getDirtyFields().length ? "inline-flex" : "none";
+    }
+
+    SAVE_FIELDS.forEach(f => {
+        document.getElementById(f.inputId).addEventListener("input", refreshSaveButton);
+    });
+
+    document.getElementById("saveAllBtn").addEventListener("click", async () => {
+        const saveAllBtn = document.getElementById("saveAllBtn");
+        const dirty = getDirtyFields();
+        if (!dirty.length) return;
+
+        // validate URLs
+        let hasError = false;
+        dirty.forEach(f => {
+            const val = document.getElementById(f.inputId).value.trim();
+            if (f.url && val && !val.startsWith("http")) {
+                showToast("❌ " + f.label + " must start with https://");
+                hasError = true;
+            }
+            if (f.key === "min_withdrawal" && val && Number(val) <= 0) {
+                showToast("❌ Minimum withdrawal must be a valid amount.");
+                hasError = true;
+            }
+        });
+        if (hasError) return;
+
+        saveAllBtn.disabled = true;
+        saveAllBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:0.875rem;width:0.875rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Saving…';
+
+        const updates = {};
+        dirty.forEach(f => {
+            const val = document.getElementById(f.inputId).value.trim();
+            updates[f.key] = f.key === "min_withdrawal" ? Number(val) : val;
+        });
+
+        try {
+            await setDoc(CONFIG_DOC, updates, { merge: true });
+            dirty.forEach(f => {
+                const val = document.getElementById(f.inputId).value.trim();
+                baseline[f.key] = val;
+                if (f.displayId) {
+                    document.getElementById(f.displayId).textContent =
+                        f.key === "min_withdrawal" ? (val ? "₦" + Number(val).toLocaleString() : "—") : (val || "—");
+                }
+            });
+            refreshSaveButton();
+            showToast("✅ " + (dirty.length === 1 ? dirty[0].label : dirty.length + " settings") + " updated!");
+        } catch (err) {
+            showToast("❌ Save failed — check Firestore rules.");
+            console.error("Save error:", err);
+        } finally {
+            saveAllBtn.disabled = false;
+            saveAllBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:0.875rem;width:0.875rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save Changes';
+        }
+    });
+
+</script>
+
+</body>
+</html>

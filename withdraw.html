@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Withdraw — Incossify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<div class="app">
+  <div class="bg"></div>
+  <div class="app-body">
+
+    <div class="app-top">
+      <a href="dashboard.html" class="back-btn glass">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+      </a>
+      <div>
+        <p style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--primary);font-weight:700;">Move funds</p>
+        <h1>Withdraw</h1>
+      </div>
+    </div>
+
+    <!-- Withdraw status card -->
+    <div class="withdraw-card" id="withdrawStatusCard" style="margin-top:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <p style="font-size:0.625rem;text-transform:uppercase;letter-spacing:0.18em;opacity:0.8;font-weight:600;">Withdrawable Balance</p>
+          <p style="margin-top:0.25rem;font-size:1.75rem;font-weight:800;" id="wdBalance">₦0</p>
+        </div>
+        <span class="wd-status" id="wdStatus">Locked</span>
+      </div>
+      <div style="margin-top:1.25rem;">
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;opacity:0.9;">
+          <span>Minimum withdrawal</span>
+          <strong id="minWithdrawal">₦15,000</strong>
+        </div>
+        <div class="wd-bar"><div id="wdProgress" style="width:0%;"></div></div>
+        <p style="margin-top:0.5rem;font-size:0.75rem;opacity:0.85;" id="wdRemaining">Need ₦15,000 more to unlock</p>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-aqua btn-block" id="withdrawBtn" style="margin-top:1rem;padding:1rem;">Withdraw Now</button>
+
+    <!-- Bank form (revealed when unlocked) -->
+    <form class="card glass-strong shadow-elegant" id="withdrawForm" style="margin-top:1rem;padding:1.5rem;display:none;grid-gap:1rem;gap:1rem;">
+      <div class="field-error" id="withdrawError" style="display:none;"></div>
+
+      <label class="block">
+        <span class="field-label">Amount (₦)</span>
+        <input required type="number" min="15000" class="field" id="amount" placeholder="15000">
+        <span style="display:block;margin-top:0.375rem;font-size:0.75rem;color:var(--foreground);opacity:0.6;">You can withdraw up to <b id="wdMax">₦0</b></span>
+      </label>
+
+      <label class="block">
+        <span class="field-label">Bank Name</span>
+        <div style="position:relative;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);height:1rem;width:1rem;color:var(--foreground);opacity:0.6;"><path d="M3 9 12 2l9 7v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+          <input required type="text" class="field pl-10" id="bankName" placeholder="Opay / Access / GTB...">
+        </div>
+      </label>
+
+      <label class="block">
+        <span class="field-label">Account Name</span>
+        <input required type="text" class="field" id="accountName" placeholder="Full name on the account">
+      </label>
+
+      <label class="block">
+        <span class="field-label">Account Number</span>
+        <input required type="text" class="field" id="accountNumber" inputmode="numeric" pattern="\d{10,11}" placeholder="10-digit account number">
+      </label>
+
+      <button type="submit" class="btn btn-aqua btn-block" style="padding:1rem;">Confirm Withdrawal</button>
+    </form>
+
+  </div>
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<div class="toast" id="toastBar"></div>
+
+<!-- Withdrawal limit modal -->
+<div id="withdrawGate">
+  <div class="gate-box">
+    <div class="gate-ic">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>
+    </div>
+    <h3>Withdrawal Unavailable</h3>
+    <p>You can only withdraw when your balance reaches a minimum of <b>₦15,000</b>. Your current balance is <b id="gateBalance">₦0</b>. Keep earning!</p>
+    <button id="gateOk" type="button">Got it</button>
+  </div>
+</div>
+
+<!-- Activate your account modal -->
+<div id="activateGate">
+  <div class="gate-box">
+    <div class="gate-ic">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+    </div>
+    <h3>Activate your account</h3>
+    <p>Please activate your account in order to withdraw and keep earning.</p>
+    <button id="activateNow" type="button">Activate Now</button>
+    <button id="activateBack" type="button" style="margin-top:0.5rem;background:rgb(255 255 255 / 0.08);border:1px solid var(--border);color:var(--foreground);">Go Back</button>
+  </div>
+</div>
+
+<script type="module">
+  import { getCurrentUser, getUsers, saveUsers, saveUser, loadConfig, isActive, openActivationPicker, fmt, renderNav } from "./assets/app.js";
+
+  const user = getCurrentUser();
+  if (!user) { window.location.href = "login.html"; throw new Error("redirect"); }
+
+  let config = {};
+  const MIN_WITHDRAWAL = 15000;
+
+  const accNum = document.getElementById("accountNumber");
+  accNum.addEventListener("input", () => { accNum.value = accNum.value.replace(/\D/g, ""); });
+
+  function isUnlocked() { return Number(user.totalBalance || 0) >= MIN_WITHDRAWAL; }
+
+  function updateStatus() {
+    const bal = Number(user.totalBalance || 0);
+    document.getElementById("wdBalance").textContent = fmt(bal);
+    document.getElementById("minWithdrawal").textContent = fmt(MIN_WITHDRAWAL);
+    document.getElementById("wdMax").textContent = fmt(bal);
+
+    const pct = Math.min(bal / MIN_WITHDRAWAL * 100, 100);
+    document.getElementById("wdProgress").style.width = pct.toFixed(1) + "%";
+
+    const statusEl = document.getElementById("wdStatus");
+    const remainingEl = document.getElementById("wdRemaining");
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    if (bal >= MIN_WITHDRAWAL) {
+      statusEl.textContent = "Unlocked";
+      statusEl.className = "wd-status unlocked";
+      remainingEl.textContent = "You can withdraw now 🎉";
+      withdrawBtn.classList.remove("blurred");
+    } else {
+      statusEl.textContent = "Locked";
+      statusEl.className = "wd-status";
+      remainingEl.textContent = "Need " + fmt(MIN_WITHDRAWAL - bal) + " more to unlock";
+      withdrawBtn.classList.add("blurred");
+    }
+  }
+
+  function showLimitModal() {
+    document.getElementById("gateBalance").textContent = fmt(user.totalBalance);
+    document.getElementById("withdrawGate").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  document.getElementById("gateOk").addEventListener("click", () => {
+    document.getElementById("withdrawGate").classList.remove("active");
+    document.body.style.overflow = "";
+  });
+
+  function showActivateModal() {
+    document.getElementById("activateGate").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideActivateModal() {
+    document.getElementById("activateGate").classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  document.getElementById("activateNow").addEventListener("click", () => {
+    openActivationPicker();
+  });
+  document.getElementById("activateBack").addEventListener("click", hideActivateModal);
+
+  async function load() {
+    config = await loadConfig();
+    updateStatus();
+    renderNav("withdraw");
+  }
+
+  // Withdraw Now button
+  document.getElementById("withdrawBtn").addEventListener("click", () => {
+    if (!isUnlocked()) { showLimitModal(); return; }
+    if (!isActive()) { showActivateModal(); return; }
+    document.getElementById("withdrawForm").style.display = "grid";
+    document.getElementById("withdrawBtn").style.display = "none";
+  });
+
+  document.getElementById("withdrawForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const errBox = document.getElementById("withdrawError");
+    const btn = e.target.querySelector('button[type="submit"]');
+    errBox.style.display = "none";
+
+    const amount = Number(document.getElementById("amount").value);
+    const bankName = document.getElementById("bankName").value.trim();
+    const accountName = document.getElementById("accountName").value.trim();
+    const accountNumber = accNum.value.trim();
+
+    if (!isUnlocked()) { showLimitModal(); return; }
+    if (!amount || amount < MIN_WITHDRAWAL) {
+      errBox.textContent = "Minimum withdrawal is " + fmt(MIN_WITHDRAWAL) + ".";
+      errBox.style.display = "block";
+      return;
+    }
+    if (amount > Number(user.totalBalance || 0)) {
+      errBox.textContent = "Insufficient balance.";
+      errBox.style.display = "block";
+      return;
+    }
+    if (!bankName || !accountName || accountNumber.length < 10) {
+      errBox.textContent = "Please fill in valid bank details.";
+      errBox.style.display = "block";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Processing withdrawal…";
+
+    const transactionId = "INCW-" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+    const newBal = Number(user.totalBalance || 0) - amount;
+
+    // update current user
+    user.totalBalance = Math.max(0, newBal);
+    saveUser(user);
+
+    // keep users array in sync
+    const users = getUsers();
+    const idx = users.findIndex(u => u.email === user.email);
+    if (idx >= 0) { users[idx] = user; saveUsers(users); }
+
+    // withdrawal history
+    const withdrawals = JSON.parse(localStorage.getItem("incossify_withdrawals") || "[]");
+    withdrawals.push({ transactionId, wallet: "Total Balance", amount, bankName, accountName, accountNumber, status: "Pending", date: new Date().toISOString() });
+    localStorage.setItem("incossify_withdrawals", JSON.stringify(withdrawals));
+
+    const receipt = { transactionId, referenceNumber: transactionId, date: new Date().toISOString(), status: "Pending", wallet: "Total Balance", amount, bankName, accountName, accountNumber };
+    localStorage.setItem("incossify_receipt", JSON.stringify(receipt));
+
+    setTimeout(() => { window.location.href = "withdraw-receipt.html"; }, 500);
+  });
+
+  load();
+</script>
+</body>
+</html>
