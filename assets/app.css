@@ -767,6 +767,19 @@ select.field { appearance: none; }
   padding: 0 1.5rem;
 }
 #activateGate.active { display: flex; }
+#accountGate {
+  position: fixed;
+  inset: 0;
+  z-index: 102;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in oklab, var(--background) 85%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  padding: 0 1.5rem;
+}
+#accountGate.active { display: flex; }
 .gate-box {
   width: 100%;
   max-width: 24rem;

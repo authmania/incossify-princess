@@ -61,6 +61,30 @@
       </div>
     </div>
 
+    <!-- Account Details -->
+    <div class="card glass-strong shadow-elegant" style="margin-top:1rem;padding:1.5rem;">
+      <div class="sec-head">
+        <h2>Account Details</h2>
+      </div>
+      <p style="font-size:0.75rem;color:var(--foreground);opacity:0.6;margin-bottom:1rem;">Add your bank details so withdrawals go straight to your account.</p>
+      <div style="display:grid;gap:0.875rem;">
+        <label class="block">
+          <span class="field-label">Bank Name</span>
+          <input type="text" class="field" id="bankName" placeholder="e.g. Opay / Access / GTB...">
+        </label>
+        <label class="block">
+          <span class="field-label">Account Name</span>
+          <input type="text" class="field" id="accountName" placeholder="Full name on the account">
+        </label>
+        <label class="block">
+          <span class="field-label">Account Number</span>
+          <input type="text" class="field" id="accountNumber" inputmode="numeric" pattern="\d{10,11}" placeholder="10-digit account number">
+        </label>
+        <button type="button" class="btn btn-aqua btn-block" id="saveAccountBtn" style="padding:0.9rem;">Save Account Details</button>
+        <div class="link-status" id="accountStatus" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2em;color:oklch(85% 0.13 160);"></div>
+      </div>
+    </div>
+
     <button id="signoutBtn" class="btn btn-danger-ghost btn-block" style="margin-top:1.5rem;padding:0.875rem;">
       Sign out
     </button>
@@ -72,7 +96,7 @@
 <div class="toast" id="toastBar"></div>
 
 <script type="module">
-  import { getCurrentUser, clearUser, renderNav, toast } from "./assets/app.js";
+  import { getCurrentUser, getUsers, saveUsers, saveUser, clearUser, renderNav, toast } from "./assets/app.js";
 
   const user = getCurrentUser();
   if (!user) { window.location.href = "login.html"; throw new Error("redirect"); }
@@ -89,8 +113,42 @@
       navigator.clipboard.writeText(code).then(() => toast("Referral code copied!"));
     });
 
+    // prefill account details
+    document.getElementById("bankName").value = user.bankName || "";
+    document.getElementById("accountName").value = user.accountName || "";
+    document.getElementById("accountNumber").value = user.accountNumber || "";
+
     renderNav("profile");
   }
+
+  const accNum = document.getElementById("accountNumber");
+  accNum.addEventListener("input", () => { accNum.value = accNum.value.replace(/\D/g, ""); });
+
+  document.getElementById("saveAccountBtn").addEventListener("click", () => {
+    const status = document.getElementById("accountStatus");
+    const bankName = document.getElementById("bankName").value.trim();
+    const accountName = document.getElementById("accountName").value.trim();
+    const accountNumber = accNum.value.trim();
+
+    if (!bankName || !accountName || accountNumber.length < 10) {
+      status.textContent = "Please fill in valid bank details.";
+      status.style.color = "oklch(75% 0.15 25)";
+      return;
+    }
+
+    user.bankName = bankName;
+    user.accountName = accountName;
+    user.accountNumber = accountNumber;
+    saveUser(user);
+
+    const users = getUsers();
+    const idx = users.findIndex(u => u.email === user.email);
+    if (idx >= 0) { users[idx] = user; saveUsers(users); }
+
+    status.textContent = "✓ Account details saved!";
+    status.style.color = "oklch(85% 0.13 160)";
+    toast("Account details saved!");
+  });
 
   document.getElementById("signoutBtn").addEventListener("click", () => { clearUser(); window.location.href = "login.html"; });
 

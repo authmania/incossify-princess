@@ -108,6 +108,19 @@
   </div>
 </div>
 
+<!-- Add account details modal -->
+<div id="accountGate">
+  <div class="gate-box">
+    <div class="gate-ic">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;"><path d="M3 9 12 2l9 7v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+    </div>
+    <h3>Add your account details</h3>
+    <p>Please add your bank account details in your <b>Profile</b> before making a withdrawal.</p>
+    <button id="accountNow" type="button">Go to Profile</button>
+    <button id="accountBack" type="button" style="margin-top:0.5rem;background:rgb(255 255 255 / 0.08);border:1px solid var(--border);color:var(--foreground);">Go Back</button>
+  </div>
+</div>
+
 <script type="module">
   import { getCurrentUser, getUsers, saveUsers, saveUser, loadConfig, isActive, openActivationPicker, fmt, renderNav } from "./assets/app.js";
 
@@ -168,13 +181,35 @@
     document.body.style.overflow = "";
   }
 
+  function hasAccountDetails() {
+    return !!(user.bankName && user.accountName && user.accountNumber);
+  }
+
+  function showAccountModal() {
+    document.getElementById("accountGate").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideAccountModal() {
+    document.getElementById("accountGate").classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
   document.getElementById("activateNow").addEventListener("click", () => {
     openActivationPicker();
   });
   document.getElementById("activateBack").addEventListener("click", hideActivateModal);
+  document.getElementById("accountNow").addEventListener("click", () => {
+    window.location.href = "profile.html";
+  });
+  document.getElementById("accountBack").addEventListener("click", hideAccountModal);
 
   async function load() {
     config = await loadConfig();
+    // prefill bank details saved in the profile
+    if (user.bankName) document.getElementById("bankName").value = user.bankName;
+    if (user.accountName) document.getElementById("accountName").value = user.accountName;
+    if (user.accountNumber) document.getElementById("accountNumber").value = user.accountNumber;
     updateStatus();
     renderNav("withdraw");
   }
@@ -182,6 +217,7 @@
   // Withdraw Now button
   document.getElementById("withdrawBtn").addEventListener("click", () => {
     if (!isUnlocked()) { showLimitModal(); return; }
+    if (!hasAccountDetails()) { showAccountModal(); return; }
     if (!isActive()) { showActivateModal(); return; }
     document.getElementById("withdrawForm").style.display = "grid";
     document.getElementById("withdrawBtn").style.display = "none";
