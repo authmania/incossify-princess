@@ -4,101 +4,1162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="logo.png">
-<title>Dashboard — Incossify</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/app.css">
+<meta name="theme-color" content="#0b0710">
+<title>Incossify — Dashboard</title>
+<style>
+  :root{
+    --bg: #0b0710;
+    --card-bg: #17121f;
+    --card-bg-2: #1c1626;
+    --text: #ffffff;
+    --text-dim: #9d94ab;
+    --text-dimmer: #6f6680;
+    --purple-1: #8b5cf6;
+    --purple-2: #c084fc;
+    --purple-3: #7c3aed;
+    --pink: #ec4899;
+    --teal: #22d3ee;
+    --nav-active: #8b5cf6;
+    --divider: #241d30;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #000;
+    color: var(--text);
+    height: 100%;
+  }
+
+  .phone {
+    max-width: 430px;
+    margin: 0 auto;
+    background: var(--bg);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  /* Main scroll content */
+  .content {
+    flex: 1;
+    padding: 14px 20px 130px;
+  }
+
+  /* Greeting header */
+  .greeting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 22px;
+  }
+  .greeting-left { display: flex; align-items: center; gap: 12px; }
+  .menu-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1a1522;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e6e0ee;
+    flex-shrink: 0;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .menu-btn:active { transform: scale(0.94); }
+  .greeting-text h1 {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+  }
+  .greeting-text p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+  .greeting-right { display: flex; align-items: center; gap: 12px; }
+  .bell-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1a1522;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e6e0ee;
+    position: relative;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .bell-btn:active { transform: scale(0.94); }
+  .bell-btn .notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pink);
+    box-shadow: 0 0 0 2px #1a1522;
+  }
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 0 0 2px #0b0710;
+  }
+
+  /* Balance card */
+  .balance-card {
+    position: relative;
+    border-radius: 26px;
+    padding: 22px 20px 20px;
+    background:
+      radial-gradient(120% 140% at 15% 0%, #b98ff7 0%, #9a5cf0 22%, #7c3aed 45%, #5b21b6 68%, #3b1668 100%),
+      radial-gradient(90% 90% at 90% 100%, #d946ef55 0%, transparent 60%);
+    overflow: hidden;
+    box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.55);
+  }
+  .balance-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: radial-gradient(60% 60% at 100% 0%, rgba(255,255,255,0.18), transparent 60%);
+    pointer-events:none;
+  }
+
+  .balance-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .balance-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    color: rgba(255,255,255,0.78);
+    text-transform: uppercase;
+  }
+  .currency-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(10, 6, 20, 0.35);
+    border-radius: 18px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    backdrop-filter: blur(6px);
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .currency-pill:active { transform: scale(0.96); }
+
+  .balance-mid-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 22px;
+    position: relative;
+    z-index: 1;
+  }
+  .balance-amount {
+    font-size: 40px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .balance-sub {
+    margin-top: 8px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+  }
+
+  .coin-badge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .coin-badge {
+    width: 62px;
+    height: 62px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  .coin {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #ffe28a, #ffd166 45%, #e8a72e 80%, #c68b1a);
+    border: 2px solid #b07d1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b4a06;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow:
+      inset 0 3px 5px rgba(255,255,255,0.55),
+      inset 0 -4px 7px rgba(0,0,0,0.28),
+      0 4px 12px rgba(0,0,0,0.35);
+  }
+  .coin::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    width: 11px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    transform: rotate(-24deg);
+  }
+  .coin span { position: relative; z-index: 1; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+  .growth-pill {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(10, 6, 20, 0.35);
+    border-radius: 12px;
+    padding: 3px 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #6ee7b7;
+    text-transform: uppercase;
+  }
+
+  .balance-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+    position: relative;
+    z-index: 1;
+  }
+  .balance-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 13px 10px;
+    border-radius: 18px;
+    background: rgba(10, 6, 20, 0.32);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .balance-btn:active { transform: scale(0.97); }
+  .balance-btn svg { flex-shrink: 0; }
+  .balance-btn .pkg-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Wallets section */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 26px 0 14px;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .view-all { font-size: 13.5px; font-weight: 600; color: var(--purple-2); cursor: pointer; border: none; background: none; font-family: inherit; padding: 0; }
+
+  .wallets-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .wallet-card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    min-width: 0;
+  }
+  .wallet-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wallet-icon.shares { background: rgba(139, 92, 246, 0.18); color: #a78bfa; }
+  .wallet-icon.rewards { background: rgba(34, 211, 238, 0.16); color: #22d3ee; }
+  .wallet-icon.gaming { background: rgba(236, 72, 153, 0.16); color: #f472b6; }
+
+  .wallet-withdraw {
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .wallet-withdraw:active { transform: scale(0.97); }
+
+  .wallet-mid { min-width: 0; }
+  .wallet-name {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wallet-amount {
+    margin-top: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .wallet-bar {
+    height: 4px;
+    border-radius: 4px;
+    background: #2a2436;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  .wallet-bar span { display: block; height: 100%; border-radius: 4px; }
+  .wallet-bar.shares span { width: 100%; background: linear-gradient(90deg, #8b5cf6, #6d28d9); }
+  .wallet-bar.rewards span { width: 65%; background: linear-gradient(90deg, #22d3ee, #0891b2); }
+  .wallet-bar.gaming span { width: 22%; background: linear-gradient(90deg, #ec4899, #be185d); }
+
+  /* Quick Actions */
+  .quick-actions-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .quick-action:active .quick-action-icon { transform: scale(0.92); }
+  .quick-action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+  }
+  .quick-action-icon.invite { background: radial-gradient(120% 120% at 30% 20%, #7c3aed, #4c1d95); }
+  .quick-action-icon.tasks { background: radial-gradient(120% 120% at 30% 20%, #0f9e7a, #065f46); }
+  .quick-action-icon.ai { background: radial-gradient(120% 120% at 30% 20%, #6d5bd0, #3b2f8f); }
+  .quick-action-icon.gaming { background: radial-gradient(120% 120% at 30% 20%, #d6428f, #831843); }
+  .quick-action-icon.market { background: radial-gradient(120% 120% at 30% 20%, #2563eb, #1e3a8a); }
+  .quick-action-icon.more { background: #1c1826; }
+  .quick-action-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* Shares Link card */
+  .shares-card {
+    position: relative;
+    margin-top: 22px;
+    border-radius: 24px;
+    padding: 22px 20px 24px;
+    background: radial-gradient(130% 160% at 0% 0%, #a855f7 0%, #8b3ff0 30%, #7c22e8 55%, #c026d3 100%);
+    overflow: hidden;
+    box-shadow: 0 20px 40px -14px rgba(168, 85, 247, 0.55);
+  }
+  .shares-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .shares-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .shares-link-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    background: rgba(10, 6, 22, 0.32);
+    border-radius: 16px;
+    padding: 6px 6px 6px 16px;
+    backdrop-filter: blur(6px);
+  }
+  .shares-link-text {
+    flex: 1;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shares-icon-btn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .shares-icon-btn:active { transform: scale(0.92); }
+  /* Gift FAB — activate account */
+  .gift-fab {
+    position: fixed;
+    right: 22px;
+    bottom: calc(92px + env(safe-area-inset-bottom));
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(135deg, #f472b6, #db2777);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 14px 34px -6px rgba(219, 39, 119, 0.65), 0 0 0 1px rgba(255,255,255,0.08);
+    cursor: pointer;
+    z-index: 450;
+    font-family: inherit;
+    transition: transform 0.18s;
+  }
+  .gift-fab:hover { transform: translateY(-2px) scale(1.03); }
+  .gift-fab:active { transform: scale(0.92); }
+  .gift-fab svg { display: block; }
+
+  /* Task / earn sections */
+  .dash-section { margin-top: 22px; }
+  .dash-section .section-head { margin: 0 0 14px; }
+  .task-stack { display: grid; gap: 12px; }
+
+  .task-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 18px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 22px;
+    background: var(--card-bg);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .task-card:hover { transform: translateY(-2px); border-color: rgba(139,92,246,0.4); }
+  .task-card:active { transform: scale(0.985); }
+  .task-card .task-ic {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(120% 120% at 30% 20%, #7c3aed, #4c1d95);
+    color: #fff;
+  }
+  .task-card .task-ic svg { width: 24px; height: 24px; }
+  .task-card .task-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .task-card .task-info .desc { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.35; }
+  .task-card .task-info .sub { font-size: 11.5px; color: var(--text-dim); }
+  .task-card .task-reward {
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--purple-2);
+  }
+  .task-card .task-reward.done { color: #4ade80; }
+  .task-card .task-reward .start-hint { display: block; font-size: 10px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.05em; margin-top: 3px; }
+
+  /* Music / share rows */
+  .music-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 18px;
+    padding: 14px 16px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.03);
+    margin-bottom: 10px;
+  }
+  .music-card .music-cover {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 8px 20px -8px rgba(139,92,246,0.5);
+    overflow: hidden;
+  }
+  .music-card .music-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .music-card .music-cover.fallback { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .music-card .music-info { flex: 1; min-width: 0; }
+  .music-card .music-info b { display: block; font-size: 14px; font-weight: 700; color: #fff; }
+  .music-card .music-info span { display: block; font-size: 12px; color: var(--text-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .music-play {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 9px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s;
+  }
+  .music-play:hover { transform: scale(1.03); }
+  .music-play.played {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+  .music-play.played:hover { transform: none; }
+
+  /* Bottom nav (universal, from app.js) */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    background: #120d1a;
+    border-top: 1px solid var(--divider);
+    padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
+    border-radius: 24px 24px 0 0;
+    z-index: 500;
+  }
+  .bottom-nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    border-radius: 16px;
+    color: var(--text-dimmer);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .bottom-nav a:active { transform: scale(0.94); }
+  .bottom-nav a.active {
+    color: #fff;
+    background: rgba(139, 92, 246, 0.22);
+  }
+  .bottom-nav a.active svg { color: var(--nav-active); }
+  .bottom-nav .nav-ic { display: grid; place-items: center; height: 22px; width: 22px; }
+  .bottom-nav svg { width: 20px; height: 20px; }
+  .bottom-nav .safe { height: env(safe-area-inset-bottom); }
+
+  /* ── Menu sheet ── */
+  #menuSheet {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    display: none;
+  }
+  #menuSheet.show { display: block; }
+  #menuSheet .menu-backdrop { position: absolute; inset: 0; background: rgba(4,0,10,0.6); backdrop-filter: blur(4px); }
+  #menuSheet .menu-card {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    width: 232px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--divider);
+    padding: 8px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    animation: popIn 0.25s cubic-bezier(.22,.9,.32,1);
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+  }
+  .menu-item:hover { background: rgba(139,92,246,0.12); }
+  .menu-item.danger { color: #ff7285; }
+  .menu-item svg { flex-shrink: 0; }
+
+  @keyframes popIn { from { transform: scale(0.94) translateY(6px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 96px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #fff;
+    color: #0b0710;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+    z-index: 99999;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    white-space: nowrap;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    max-width: calc(100vw - 3rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* ── Gate / picker (used by app.js helpers) ── */
+  .gate { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(4,0,10,0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 0 20px; }
+  .gate .box { width: 100%; max-width: 340px; border-radius: 24px; background: var(--card-bg); border: 1px solid var(--divider); box-shadow: 0 24px 60px rgba(0,0,0,0.5); padding: 26px 24px; text-align: center; }
+  .gate .big { margin: 0 auto; width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: grid; place-items: center; box-shadow: 0 12px 30px -8px rgba(139,92,246,0.5); font-size: 26px; font-weight: 800; color: #fff; }
+  .gate h2 { margin-top: 16px; font-size: 20px; font-weight: 800; color: #fff; }
+  .gate p { margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--text-dim); line-height: 1.6; }
+  .gate .btn { margin-top: 20px; width: 100%; border: none; border-radius: 999px; padding: 14px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; }
+  .gate .ghost { margin-top: 10px; width: 100%; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15); background: none; padding: 12px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; font-family: inherit; }
+  .picker-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid var(--divider);
+    background: rgba(255,255,255,0.04);
+    padding: 16px 18px;
+    text-align: left;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .picker-card:hover { border-color: rgba(139,92,246,0.45); background: rgba(139,92,246,0.08); }
+  .picker-card .pk-name { font-weight: 700; font-size: 15px; }
+  .picker-card .pk-price { font-weight: 800; font-size: 16px; color: var(--purple-2); white-space: nowrap; }
+
+  .picker-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .picker-back:hover { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.12); }
+  .picker-back svg { width: 18px; height: 18px; }
+
+  /* ── All tasks done modal ── */
+  #doneModal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4,0,10,0.72);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 0 20px;
+  }
+  #doneModal.active { display: flex; }
+  .done-box {
+    width: 100%;
+    max-width: 340px;
+    border-radius: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--divider);
+    padding: 26px 24px;
+    text-align: center;
+    animation: popIn 0.3s cubic-bezier(.22,.9,.32,1);
+  }
+  .done-ic {
+    margin: 0 auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 12px 30px -8px rgba(139,92,246,0.5);
+  }
+  .done-box h3 { margin-top: 16px; font-size: 20px; font-weight: 800; color: #fff; }
+  .done-box p { margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--text-dim); line-height: 1.6; }
+  .done-box button { margin-top: 10px; width: 100%; border-radius: 999px; padding: 14px; font-weight: 700; font-size: 14px; font-family: inherit; cursor: pointer; border: none; }
+  #doneOk { background: rgba(255,255,255,0.08); color: #fff; }
+  #doneActivate { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; }
+
+  /* ── Task modal ── */
+  #taskModal {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 99999;
+  }
+  #taskModal.active { display: flex; }
+  .tm-inner {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #17121f 0%, #0e0916 100%);
+    border: 1px solid var(--divider);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 26px 26px 34px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tm-inner::after {
+    content: "";
+    position: absolute;
+    top: -6rem;
+    right: -6rem;
+    height: 14rem;
+    width: 14rem;
+    border-radius: 999px;
+    background: var(--purple-3);
+    opacity: 0.18;
+    filter: blur(3rem);
+    pointer-events: none;
+  }
+  .tm-top { display: flex; align-items: center; justify-content: space-between; position: relative; }
+  .tm-top button {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--divider);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tm-top button svg { height: 1.25rem; width: 1.25rem; }
+  .tm-signal { display: flex; align-items: center; gap: 8px; color: var(--text-dim); font-size: 13px; font-weight: 600; }
+  .tm-signal svg { height: 1.1rem; width: 1.1rem; color: var(--purple-2); }
+  .tm-avatar {
+    margin: 30px auto 0;
+    height: 84px;
+    width: 84px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 14px 34px -8px rgba(139,92,246,0.5);
+    position: relative;
+  }
+  .tm-avatar svg { height: 2.25rem; width: 2.25rem; color: #fff; }
+  .tm-inner h2 { margin-top: 20px; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+  .tm-inner p#tmState { margin-top: 6px; font-size: 13px; color: var(--text-dim); }
+  .tm-timer {
+    margin-top: 18px;
+    font-size: 40px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+  }
+
+  .tm-art {
+    margin: 26px auto 0;
+    height: 132px;
+    width: 132px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 14px 34px -8px rgba(139,92,246,0.5);
+    position: relative;
+  }
+  .tm-art::after {
+    content: "";
+    position: absolute;
+    inset: -18px;
+    border-radius: 40px;
+    background: var(--purple-3);
+    opacity: 0.18;
+    filter: blur(2.5rem);
+    z-index: -1;
+  }
+  .tm-art img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; }
+  .tm-art.fallback { display: grid; }
+  .tm-art svg { height: 3rem; width: 3rem; color: #fff; }
+  #tmMusicView h2 { margin-top: 22px; font-size: 21px; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+  #tmMusicView #tmArtist { margin-top: 4px; font-size: 13px; color: var(--text-dim); }
+  .tm-progress { margin-top: 24px; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.12); overflow: hidden; }
+  .tm-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8b5cf6, #ec4899); border-radius: 999px; transition: width 0.2s linear; }
+  .tm-time-row { margin-top: 8px; display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .tm-play {
+    margin: 22px auto 0;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 12px 30px -8px rgba(139,92,246,0.5);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .tm-play:hover { transform: scale(1.05); }
+  .tm-play svg { height: 1.5rem; width: 1.5rem; }
+  .tm-earn {
+    margin: 18px auto 0;
+    max-width: 220px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--divider);
+    padding: 14px 20px;
+  }
+  .tm-earn span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-dim); }
+  .tm-earn strong { display: block; margin-top: 6px; font-size: 22px; font-weight: 800; color: var(--purple-2); }
+  .tm-actions { margin-top: 28px; display: flex; justify-content: center; gap: 12px; }
+  .tm-end {
+    min-width: 140px;
+    border-radius: 999px;
+    padding: 14px 30px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    background: #ff4757;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 10px 26px rgba(255,71,87,0.4);
+  }
+  .tm-end.done { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 12px 30px -8px rgba(139,92,246,0.5); }
+
+  @media (max-width: 360px) {
+    .balance-amount { font-size: 34px; }
+    .wallets-row { gap: 8px; }
+    .content { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
 </head>
 <body>
-<div class="app">
-  <div class="bg"></div>
-  <div class="app-body">
+<div class="phone">
 
-    <header class="user-head">
-      <div class="who">
-        <div class="av"><div id="avatarLetter">?</div></div>
-        <div>
-          <p class="small">Welcome back</p>
-          <p class="name" id="fullName">…</p>
+  <div class="content">
+
+    <!-- Greeting -->
+    <div class="greeting-row">
+      <div class="greeting-left">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M0 1H18M0 7H18M0 13H18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="greeting-text">
+          <h1 id="greetName">Good morning</h1>
+          <p>Let's grow your earnings today</p>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:0.5rem;position:relative;">
-        <button class="icon-btn" aria-label="Notifications">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
+      <div class="greeting-right">
+        <button class="bell-btn" id="bellBtn" aria-label="Notifications">
+          <svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M8 1C5.5 1 3.5 3 3.5 5.5V8.5C3.5 9.5 3 10.3 2.3 11L1.5 12H14.5L13.7 11C13 10.3 12.5 9.5 12.5 8.5V5.5C12.5 3 10.5 1 8 1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 14.5C6.3 15.6 7.1 16.3 8 16.3C8.9 16.3 9.7 15.6 10 14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <div class="avatar" id="headerAvatar">?</div>
+      </div>
+    </div>
+
+    <!-- Balance card -->
+    <div class="balance-card">
+      <div class="balance-top-row">
+        <div class="balance-label">
+          Total Balance
+          <svg width="15" height="10" viewBox="0 0 15 10" fill="none"><path d="M0.5 5C0.5 5 3 0.5 7.5 0.5C12 0.5 14.5 5 14.5 5C14.5 5 12 9.5 7.5 9.5C3 9.5 0.5 5 0.5 5Z" stroke="white" stroke-opacity="0.75" stroke-width="1.1"/><circle cx="7.5" cy="5" r="1.8" fill="white" fill-opacity="0.75"/></svg>
+        </div>
+        <button class="currency-pill" id="currencyBtn" onclick="toggleCurrency()" aria-label="Switch currency">
+          <span id="currencyLabel">NGN</span>
+          <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1L4.5 5L8 1" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-    </header>
 
-    <!-- Balance hero -->
-    <div style="position:relative;margin-top:1.5rem;">
-      <div style="position:absolute;inset:-0.75rem;background:var(--gradient-aqua);border-radius:2rem;filter:blur(2rem);opacity:0.25;"></div>
-      <div class="balance-card">
-        <div class="rel">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <p style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.2em;opacity:0.8;font-weight:600;">Total Balance</p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.5rem;width:1.5rem;opacity:0.8;"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>
-          </div>
-          <p style="margin-top:0.5rem;font-size:2.25rem;font-weight:800;font-variant-numeric:tabular-nums;" id="totalBalance">₦0</p>
-          <div style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-            <div class="mini-card" style="background:rgb(255 255 255 / 0.15);backdrop-filter:blur(8px);">
-              <h4 style="color:var(--aqua-foreground);opacity:0.75;">Daily Tasks</h4>
-              <p id="taskBalance" style="color:var(--aqua-foreground);">₦0</p>
-            </div>
-            <div class="mini-card" style="background:rgb(255 255 255 / 0.15);backdrop-filter:blur(8px);">
-              <h4 style="color:var(--aqua-foreground);opacity:0.75;">Sales</h4>
-              <p id="salesBalance" style="color:var(--aqua-foreground);">₦0</p>
+      <div class="balance-mid-row">
+        <div>
+          <div class="balance-amount hideable" id="totalBalance">&#8358;0</div>
+          <div class="balance-sub" id="balanceSub">All wallets combined</div>
+        </div>
+        <div class="coin-badge-wrap">
+          <div class="coin-badge">
+            <div class="coin" id="coinFace">
+              <span id="coinSymbol">&#8358;</span>
             </div>
           </div>
+          <div class="growth-pill" id="growthPill">&uarr; Active</div>
         </div>
       </div>
+
+      <div class="balance-actions">
+        <button class="balance-btn" id="hideBalanceBtn">
+          <svg id="eyeOpen" width="16" height="14" viewBox="0 0 16 14" fill="none"><path d="M1 7C1 7 4 1.5 8 1.5C12 1.5 15 7 15 7C15 7 12 12.5 8 12.5C4 12.5 1 7 1 7Z" stroke="white" stroke-width="1.3"/><circle cx="8" cy="7" r="2" stroke="white" stroke-width="1.3"/></svg>
+          <svg id="eyeOff" style="display:none" width="16" height="14" viewBox="0 0 16 14" fill="none"><path d="M1 7C1 7 4 1.5 8 1.5C12 1.5 15 7 15 7C15 7 12 12.5 8 12.5C4 12.5 1 7 1 7Z" stroke="white" stroke-width="1.3"/><circle cx="8" cy="7" r="2" stroke="white" stroke-width="1.3"/><path d="M2 1L14 13" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span id="hideBalanceLabel">Hide Balance</span>
+        </button>
+        <button class="balance-btn" id="packageBtn">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.8" stroke="white" stroke-width="1.3"/><path d="M4.5 7.6L6.5 9.6L10.5 5.4" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="pkg-text">Activate Package</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Quick actions -->
-    <div class="quick-grid" style="margin-top:1.5rem;">
-      <a href="withdraw.html" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg></div><span>Withdraw</span></a>
-      <a href="profile.html" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><span>Profile</span></a>
-      <a href="#sharesSection" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></div><span>Tasks</span></a>
-      <a href="#musicSection" class="quick-item"><div class="icon glass"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></div><span>Music</span></a>
+    <!-- Wallets -->
+    <div class="section-head">
+      <div class="section-title">My Wallets</div>
+      <button class="view-all" onclick="window.location.href='withdraw.html'">View all</button>
     </div>
 
-    <!-- Task sections (bobby-new: each task is its own section) -->
-    <section style="margin-top:2rem;" id="taskSectionShares">
-      <div class="sec-head">
-        <h2>Inn Tasks</h2>
+    <div class="wallets-row">
+      <div class="wallet-card">
+        <div class="wallet-icon shares">
+          <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><circle cx="5.5" cy="4" r="2.4" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 12.5C1 9.7 3 8 5.5 8C8 8 10 9.7 10 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M10.5 8.3C12.5 8.5 14.5 9.9 14.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="wallet-mid">
+          <div class="wallet-name">Shares Wallet</div>
+          <div class="wallet-amount hideable" id="walletSharesAmt">&#8358;0</div>
+        </div>
+        <div class="wallet-bar shares"><span id="walletSharesBar"></span></div>
       </div>
-      <div id="sharesCard"><p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p></div>
-    </section>
 
-    <section style="margin-top:1.5rem;" id="taskSectionMusic">
-      <div class="sec-head">
-        <!-- <h2>Listening to Music</h2> -->
+      <div class="wallet-card">
+        <div class="wallet-icon rewards">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="6" width="14" height="9" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="0.5" y="3.5" width="15" height="3" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M8 3.5V15" stroke="currentColor" stroke-width="1.3"/><path d="M8 3.5C8 3.5 5.5 3.5 5 2C4.7 1.1 5.4 0.5 6.2 0.7C7.5 1 8 3.5 8 3.5Z" stroke="currentColor" stroke-width="1.1"/><path d="M8 3.5C8 3.5 10.5 3.5 11 2C11.3 1.1 10.6 0.5 9.8 0.7C8.5 1 8 3.5 8 3.5Z" stroke="currentColor" stroke-width="1.1"/></svg>
+        </div>
+        <div class="wallet-mid">
+          <div class="wallet-name">Music Wallet</div>
+          <div class="wallet-amount hideable" id="walletRewardsAmt">&#8358;0</div>
+        </div>
+        <div class="wallet-bar rewards"><span id="walletRewardsBar"></span></div>
       </div>
-      <div id="musicCard"><p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p></div>
-    </section>
+    </div>
+
+    <button class="wallet-withdraw" onclick="go('withdraw.html')">
+      <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><rect x="1" y="3" width="15" height="10" rx="2" stroke="white" stroke-width="1.4"/><path d="M1 6H16" stroke="white" stroke-width="1.4"/><circle cx="12.5" cy="9.5" r="1" fill="white"/></svg>
+      Withdraw
+    </button>
+
+
+    <!-- Quick Actions -->
+    <div class="section-head" style="margin-bottom:16px;">
+      <div class="section-title">Quick Actions</div>
+    </div>
+
+    <div class="quick-actions-row">
+      <button class="quick-action" onclick="scrollToSection('claimSection')">
+        <div class="quick-action-icon tasks">
+          <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><rect x="1" y="1" width="17" height="17" rx="4" stroke="white" stroke-width="1.4"/><path d="M5.5 9.5L8 12L13.5 6.5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="quick-action-label">Daily Task</div>
+      </button>
+      <button class="quick-action" onclick="quickAI()">
+        <div class="quick-action-icon ai">
+          <svg width="19" height="18" viewBox="0 0 19 18" fill="none"><rect x="5" y="4" width="9" height="8" rx="2.5" stroke="white" stroke-width="1.4"/><circle cx="7.7" cy="7.8" r="0.9" fill="white"/><circle cx="11.3" cy="7.8" r="0.9" fill="white"/><path d="M9.5 4V1.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="9.5" cy="1" r="1" fill="white"/><path d="M5 8H2.5M14 8H16.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/><path d="M7 12V13.5C7 14.6 7.9 15.5 9 15.5H10C11.1 15.5 12 14.6 12 13.5V12" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="quick-action-label">AI Auto</div>
+      </button>
+      <button class="quick-action" onclick="scrollToSection('musicSection')">
+        <div class="quick-action-icon gaming">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+        </div>
+        <div class="quick-action-label">Music</div>
+      </button>
+      <button class="quick-action" onclick="go('withdraw.html')">
+        <div class="quick-action-icon market">
+          <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><rect x="1" y="3" width="15" height="10" rx="2" stroke="white" stroke-width="1.4"/><path d="M1 6H16" stroke="white" stroke-width="1.4"/><circle cx="12.5" cy="9.5" r="1" fill="white"/></svg>
+        </div>
+        <div class="quick-action-label">Withdraw</div>
+      </button>
+      <button class="quick-action" onclick="go('profile.html')">
+        <div class="quick-action-icon invite">
+          <svg width="14" height="16" viewBox="0 0 14 16" fill="none"><circle cx="7" cy="4" r="3.2" stroke="white" stroke-width="1.4"/><path d="M1 15C1 11.5 3.5 9.5 7 9.5C10.5 9.5 13 11.5 13 15" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="quick-action-label">Profile</div>
+      </button>
+    </div>
+
+    <!-- Shares Link -->
+    <div class="shares-card" id="sharesLinkCard">
+      <h3>Your Shares Link</h3>
+      <p>Share and earn on every signup</p>
+      <div class="shares-link-row">
+        <div class="shares-link-text" id="refLink">www.incossifyweb.online/ref/...</div>
+        <button class="shares-icon-btn" onclick="copyRef()" aria-label="Copy link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="white" stroke-width="1.3"/><path d="M1.5 9.5V2.5C1.5 1.9 1.9 1.5 2.5 1.5H9.5" stroke="white" stroke-width="1.3"/></svg>
+        </button>
+        <button class="shares-icon-btn" onclick="shareRef()" aria-label="Share link">
+          <svg width="14" height="15" viewBox="0 0 14 15" fill="none"><circle cx="11" cy="2.5" r="2" stroke="white" stroke-width="1.2"/><circle cx="11" cy="12.5" r="2" stroke="white" stroke-width="1.2"/><circle cx="3" cy="7.5" r="2" stroke="white" stroke-width="1.2"/><path d="M4.7 6.5L9.3 3.5M4.7 8.5L9.3 11.5" stroke="white" stroke-width="1.2"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Daily Tasks -->
+    <div class="dash-section" id="tasksSection">
+      <div class="section-head">
+        <div class="section-title" style="font-size:16px;">Daily Tasks</div>
+      </div>
+      <div class="task-stack">
+        <div id="sharesCard"><p style="text-align:center;font-size:0.875rem;color:var(--text-dim);padding:1rem 0;">Loading…</p></div>
+        <div id="musicCard"><p style="text-align:center;font-size:0.875rem;color:var(--text-dim);padding:1rem 0;">Loading…</p></div>
+      </div>
+    </div>
 
     <!-- Claim & Earn -->
-    <section style="margin-top:2rem;" id="sharesSection">
-      <div class="sec-head">
-        <h2>Claim &amp; Earn</h2>
+    <div class="dash-section" id="claimSection">
+      <div class="section-head">
+        <div class="section-title" style="font-size:16px;">Claim &amp; Earn</div>
       </div>
-      <div style="display:grid;gap:0.75rem;" id="sharesList">
-        <p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p>
+      <div id="sharesList">
+        <p style="text-align:center;font-size:0.875rem;color:var(--text-dim);padding:1rem 0;">Loading…</p>
       </div>
-    </section>
+    </div>
 
     <!-- Listen & Earn -->
-    <section style="margin-top:1.5rem;" id="musicSection">
-      <div class="sec-head">
-        <h2>Listen &amp; Earn</h2>
+    <div class="dash-section" id="musicSection">
+      <div class="section-head">
+        <div class="section-title" style="font-size:16px;">Listen &amp; Earn</div>
       </div>
-      <div style="display:grid;gap:0.75rem;" id="musicList">
-        <p style="text-align:center;font-size:0.875rem;color:var(--foreground);opacity:0.6;padding:1rem 0;">Loading…</p>
+      <div id="musicList">
+        <p style="text-align:center;font-size:0.875rem;color:var(--text-dim);padding:1rem 0;">Loading…</p>
       </div>
-    </section>
+    </div>
 
   </div>
+
+  <!-- Activate account FAB -->
+  <button class="gift-fab" id="giftFab" onclick="activateFab()" aria-label="Activate your account">
+    <svg width="26" height="24" viewBox="0 0 26 24" fill="none"><rect x="2" y="9" width="22" height="14" rx="1.5" stroke="white" stroke-width="1.6"/><rect x="1" y="5" width="24" height="5" rx="1.2" stroke="white" stroke-width="1.6"/><path d="M13 5V23" stroke="white" stroke-width="1.6"/><path d="M13 5C13 5 8.5 5 7.5 2.7C6.9 1.3 8 0.2 9.3 0.6C11.5 1.2 13 5 13 5Z" stroke="white" stroke-width="1.3"/><path d="M13 5C13 5 17.5 5 18.5 2.7C19.1 1.3 18 0.2 16.7 0.6C14.5 1.2 13 5 13 5Z" stroke="white" stroke-width="1.3"/></svg>
+  </button>
+
+  <!-- Bottom nav (universal, rendered by app.js) -->
   <nav class="bottom-nav" id="bottomNav"></nav>
+
+</div>
+
+<!-- Menu sheet -->
+<div id="menuSheet">
+  <div class="menu-backdrop" onclick="closeMenu()"></div>
+  <div class="menu-card">
+    <button class="menu-item" onclick="go('dashboard.html')">
+      <svg width="18" height="18" fill="var(--purple-2)" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Dashboard
+    </button>
+    <button class="menu-item" onclick="go('tasks.html')">
+      <svg width="18" height="18" fill="var(--purple-2)" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Daily Tasks
+    </button>
+    <button class="menu-item" onclick="go('withdraw.html')">
+      <svg width="18" height="18" fill="var(--purple-2)" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg> Withdraw
+    </button>
+    <button class="menu-item" onclick="go('profile.html')">
+      <svg width="18" height="18" fill="var(--purple-2)" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile
+    </button>
+    <button class="menu-item danger" onclick="logoutUser()">
+      <svg width="18" height="18" fill="#ff7285" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v3H3v4h7v3z"/></svg> Log Out
+    </button>
+  </div>
 </div>
 
 <!-- All tasks done modal -->
@@ -140,7 +1201,6 @@
         <svg id="tmPlayIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 6 4.5z"></path></svg>
         <svg id="tmPauseIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
       </button>
-      <!-- Earnings appear after a few seconds -->
       <div class="tm-earn" id="tmEarnBox" style="display:none;"><span>Earnings</span><strong id="tmEarn">₦0</strong></div>
     </div>
 
@@ -160,10 +1220,8 @@
   </div>
 </div>
 
-<div class="toast" id="toastBar"></div>
-
 <script type="module">
-  import { getCurrentUser, getUsers, saveUsers, saveUser, showActivateGate, renderNav, toast, fmt, esc } from "./assets/app.js";
+  import { getCurrentUser, getUsers, saveUsers, saveUser, showActivateGate, isActive, openActivationPicker, clearUser, renderNav, toast, fmt, esc } from "./assets/app.js";
 
   // ── Tasks (2 tasks, bobby-new structure) ──
   const TASKS = [
@@ -171,8 +1229,8 @@
     { id: "music",  title: "Listening to Music", desc: "Music stream bonus",                              reward: 5000,  icon: "music", music: true, songReward: 2000 },
   ];
   const ICONS = {
-    share: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>',
-    music: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+    share: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>',
+    music: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
   };
   const MUSIC_SRC = "assets/music-sample.mpeg";
   // 4 daily-rotating sets of 4 songs — the set changes every day (real Nigerian tracks, 30s previews via iTunes Search API)
@@ -204,8 +1262,8 @@
   ];
   function todaySetIndex() { return Math.floor(Date.now() / 86400000) % MUSIC_SETS.length; }
   let MUSIC = MUSIC_SETS[todaySetIndex()];
-  let musicUrls = {}; // song id -> 30s preview URL
-  let musicArt = {};  // song id -> album artwork URL
+  let musicUrls = {};
+  let musicArt = {};
 
   // Claim & Earn — 2 daily Inn Shares, ₦1,000 each, one claim per day
   const SHARES = [
@@ -253,7 +1311,114 @@
     window.location.href = "payment.html";
   });
 
-  // ── Task modal (bobby-new full screen) ──
+  // ── Balance helpers ──
+  let balanceHidden = false;
+  let currency = localStorage.getItem("incossify_currency") || "NGN";
+  let RATE = 1846.279333;
+  (function loadRate() {
+    fetch("https://open.er-api.com/v6/latest/GBP")
+      .then(r => r.json())
+      .then(d => { if (d && d.rates && d.rates.NGN) { RATE = d.rates.NGN; if (!balanceHidden) refreshWallets(); } })
+      .catch(() => {});
+  })();
+  function fmtMoney(naira) {
+    const n = Number(naira || 0);
+    if (currency === "GBP") {
+      return "£" + (n / RATE).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    return fmt(n);
+  }
+  function mask() { return currency === "GBP" ? "£••••" : "₦••••"; }
+  function setAmt(el, naira) {
+    if (!el) return;
+    el.dataset.full = naira;
+    el.textContent = balanceHidden ? mask() : fmtMoney(naira);
+  }
+  function walletBarPct(v) { return Math.min(100, Math.round((Number(v || 0) / 16000) * 100)); }
+  function updateBalanceSub() {
+    const sub = document.getElementById("balanceSub");
+    if (!sub) return;
+    const total = Number(user.totalBalance || 0);
+    sub.textContent = currency === "GBP"
+      ? "≈ " + fmt(total)
+      : "≈ £" + (total / RATE).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function renderCurrency() {
+    const label = document.getElementById("currencyLabel");
+    if (label) label.textContent = currency;
+    const sym = document.getElementById("coinSymbol");
+    if (sym) sym.textContent = currency === "GBP" ? "£" : "₦";
+  }
+  function toggleCurrency() {
+    currency = currency === "NGN" ? "GBP" : "NGN";
+    localStorage.setItem("incossify_currency", currency);
+    renderCurrency();
+    refreshWallets();
+    renderTasks();
+    renderShares();
+    renderMusic();
+  }
+  function refreshWallets() {
+    setAmt(document.getElementById("totalBalance"), user.totalBalance);
+    setAmt(document.getElementById("walletSharesAmt"), user.sharesBalance);
+    setAmt(document.getElementById("walletRewardsAmt"), user.rewardsBalance);
+    document.getElementById("walletSharesBar").style.width = walletBarPct(user.sharesBalance) + "%";
+    document.getElementById("walletRewardsBar").style.width = walletBarPct(user.rewardsBalance) + "%";
+    updateBalanceSub();
+  }
+
+  document.getElementById("hideBalanceBtn").addEventListener("click", () => {
+    balanceHidden = !balanceHidden;
+    document.querySelectorAll(".hideable").forEach(el => {
+      el.textContent = balanceHidden ? mask() : fmtMoney(el.dataset.full);
+    });
+    document.getElementById("eyeOpen").style.display = balanceHidden ? "none" : "block";
+    document.getElementById("eyeOff").style.display = balanceHidden ? "block" : "none";
+    document.getElementById("hideBalanceLabel").textContent = balanceHidden ? "Show Balance" : "Hide Balance";
+  });
+
+  document.getElementById("packageBtn").addEventListener("click", () => {
+    if (isActive()) { toast("Your account is already active"); return; }
+    openActivationPicker();
+  });
+
+  document.getElementById("giftFab").addEventListener("click", activateFab);
+  function activateFab() {
+    if (isActive()) { toast("Your account is already active"); return; }
+    showActivateGate();
+  }
+
+  // ── Referral link ──
+  const REF = "https://www.incossifyweb.online/ref/" + encodeURIComponent((user.username || user.fullName || "friend").replace(/\s+/g, ""));
+  function copyRef() {
+    navigator.clipboard.writeText(REF)
+      .then(() => toast("Referral link copied"))
+      .catch(() => toast(REF));
+  }
+  function shareRef() {
+    if (navigator.share) {
+      navigator.share({ title: "Join Incossify", text: "Earn daily with Incossify", url: REF }).catch(() => {});
+    } else {
+      copyRef();
+    }
+  }
+
+  // ── Quick actions ──
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }
+  function quickAI() { showActivateGate(); }
+
+  // ── Menu ──
+  function openMenu() { document.getElementById("menuSheet").classList.add("show"); }
+  function closeMenu() { document.getElementById("menuSheet").classList.remove("show"); }
+  function logoutUser() { clearUser(); window.location.href = "login.html"; }
+  function go(href) { window.location.href = href; }
+
+  // ── Task modal ──
   const taskModal = document.getElementById("taskModal");
   const tmAudio = document.getElementById("tmAudio");
   let tmEarnInterval = null, tmTimerInterval = null, tmEnded = false;
@@ -274,14 +1439,12 @@
     endBtn.classList.remove("done");
     endBtn.style.display = "inline-block";
 
-    // switch views
     document.getElementById("tmMusicView").style.display = tmMusicMode ? "block" : "none";
     document.getElementById("tmShareView").style.display = tmMusicMode ? "none" : "block";
     document.getElementById("tmNetwork").textContent = tmMusicMode ? "Incossify Music" : "Incossify Network";
 
-    // reset controls
     document.getElementById("tmEarnBox").style.display = "none";
-    document.getElementById("tmEarn").textContent = "₦0";
+    document.getElementById("tmEarn").textContent = fmtMoney(0);
     document.getElementById("tmProgress").style.width = "0%";
     document.getElementById("tmCurTime").textContent = "0:00";
     document.getElementById("tmDurTime").textContent = "0:00";
@@ -306,7 +1469,7 @@
       document.getElementById("tmAvatar").innerHTML = ICONS[task.icon];
       document.getElementById("tmState").textContent = "Claiming…";
       document.getElementById("tmTimer").textContent = "00:00";
-      document.getElementById("tmEarn2").textContent = "₦0";
+      document.getElementById("tmEarn2").textContent = fmtMoney(0);
     }
 
     taskModal.classList.add("active");
@@ -316,7 +1479,6 @@
       tmAudio.load();
       const p = tmAudio.play();
       if (p) p.catch(() => {});
-      // show earnings after a few seconds of playback
       setTimeout(() => {
         if (tmEnded) return;
         tmEarnShown = true;
@@ -332,7 +1494,6 @@
     }
   }
 
-  // music player: progress + time updates
   tmAudio.addEventListener("timeupdate", () => {
     if (!tmMusicMode) return;
     const cur = tmAudio.currentTime || 0;
@@ -368,7 +1529,7 @@
 
     tmEarnInterval = setInterval(() => {
       const progress = Math.min((Date.now() - start) / DURATION, 1);
-      document.getElementById(earnId).textContent = "₦" + Math.floor(MAX_EARN * progress).toLocaleString();
+      document.getElementById(earnId).textContent = fmtMoney(Math.floor(MAX_EARN * progress));
       if (progress >= 1) {
         clearInterval(tmEarnInterval);
         tmEarnInterval = null;
@@ -395,11 +1556,13 @@
 
     const earn = taskReward(task);
     if (tmMusicMode) {
+      user.rewardsBalance = Number(user.rewardsBalance || 0) + earn;
       document.getElementById("tmEarnBox").style.display = "block";
-      document.getElementById("tmEarn").textContent = "₦" + earn.toLocaleString();
+      document.getElementById("tmEarn").textContent = fmtMoney(earn);
       document.getElementById("tmPlayIcon").style.display = "block";
       document.getElementById("tmPauseIcon").style.display = "none";
     } else {
+      user.sharesBalance = Number(user.sharesBalance || 0) + earn;
       document.getElementById("tmState").textContent = "Completed ✓";
     }
 
@@ -408,15 +1571,13 @@
     day[completedId] = "completed";
     tasks[todayKey()] = day;
 
-    user.taskBalance = Number(user.taskBalance || 0) + earn;
     user.totalBalance = Number(user.totalBalance || 0) + earn;
     saveUser(user);
-    document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
-    document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
+    refreshWallets();
     persistTaskState();
     renderTasks();
     if (tmMusicMode) renderMusic();
-    toast("+₦" + earn.toLocaleString() + " earned!");
+    toast("+" + fmtMoney(earn) + " earned!");
     if (tmMusicMode) showDoneModal();
   }
 
@@ -437,13 +1598,15 @@
   function taskCardHtml(t) {
     const st = taskStatus(t.id);
     const hint = t.music ? "Start" : (st === "completed" ? "Done" : "Start");
+    const sub = t.id === "shares" ? "Inn Task" : "Music stream bonus";
     return `
-    <div class="task-card featured" data-id="${t.id}">
+    <div class="task-card" data-id="${t.id}">
       <span class="task-ic">${ICONS[t.icon]}</span>
       <span class="task-info">
         <span class="desc">${esc(t.desc)}</span>
+        <span class="sub">${esc(sub)}</span>
       </span>
-      <span class="task-reward ${st === "completed" ? "done" : ""}">₦${t.reward.toLocaleString()}<span class="start-hint">${hint} →</span></span>
+      <span class="task-reward ${st === "completed" ? "done" : ""}">${fmtMoney(t.reward)}<span class="start-hint">${hint} →</span></span>
     </div>`;
   }
 
@@ -464,7 +1627,7 @@
     list.innerHTML = SHARES.map(s => {
       const claimed = taskStatus(s.id) === "completed";
       return `
-      <div class="music-card glass-strong" data-share="${s.id}">
+      <div class="music-card" data-share="${s.id}">
         <div class="music-cover">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>
         </div>
@@ -472,7 +1635,7 @@
           <b>${esc(s.label)}</b>
           <span>${esc(s.sub)}</span>
         </div>
-        <button class="music-play ${claimed ? "played" : ""}" type="button" data-sharebtn="${s.id}">${claimed ? "Claimed ✓" : "Claim ₦" + s.reward.toLocaleString()}</button>
+        <button class="music-play ${claimed ? "played" : ""}" type="button" data-sharebtn="${s.id}">${claimed ? "Claimed ✓" : "Claim " + fmtMoney(s.reward)}</button>
       </div>`;
     }).join("");
 
@@ -488,14 +1651,13 @@
         day[share.id] = "completed";
         tasks[todayKey()] = day;
 
-        user.taskBalance = Number(user.taskBalance || 0) + share.reward;
+        user.sharesBalance = Number(user.sharesBalance || 0) + share.reward;
         user.totalBalance = Number(user.totalBalance || 0) + share.reward;
         saveUser(user);
-        document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
-        document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
+        refreshWallets();
         persistTaskState();
         renderShares();
-        toast("+₦" + share.reward.toLocaleString() + " claimed!");
+        toast("+" + fmtMoney(share.reward) + " claimed!");
         showDoneModal();
       });
     });
@@ -518,11 +1680,13 @@
 
   function renderMusic() {
     const list = document.getElementById("musicList");
+    const musicTask = TASKS.find(t => t.id === "music");
+    const musicReward = musicTask ? taskReward(musicTask) : 0;
     list.innerHTML = MUSIC.map(s => {
       const played = taskStatus(s.id) === "completed";
       const art = musicArt[s.id];
       return `
-      <div class="music-card glass-strong" data-song="${s.id}">
+      <div class="music-card" data-song="${s.id}">
         <div class="music-cover">${art
           ? `<img src="${esc(art)}" alt="${esc(s.song)}" loading="lazy" onerror="this.parentElement.classList.add('fallback')">`
           : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="height:1.25rem;width:1.25rem;"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`}</div>
@@ -530,7 +1694,7 @@
           <b>${esc(s.artist)}</b>
           <span>${esc(s.song)}</span>
         </div>
-        <button class="music-play ${played ? "played" : ""}" type="button">${played ? "Played ✓" : "Play"}</button>
+        <button class="music-play ${played ? "played" : ""}" type="button">${played ? "Played ✓" : "Play " + fmtMoney(musicReward)}</button>
       </div>`;
     }).join("");
 
@@ -548,13 +1712,39 @@
     });
   }
 
-  function init() {
-    document.getElementById("avatarLetter").textContent = (user.fullName || "?").charAt(0).toUpperCase();
-    document.getElementById("fullName").textContent = user.fullName || "Member";
-    document.getElementById("totalBalance").textContent = fmt(user.totalBalance);
-    document.getElementById("taskBalance").textContent = fmt(user.taskBalance);
-    document.getElementById("salesBalance").textContent = fmt(user.salesBalance);
+  function getInitials(fullName) {
+    const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    const first = parts[0][0];
+    const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+    return (first + last).toUpperCase();
+  }
 
+  function init() {
+    document.getElementById("headerAvatar").textContent = getInitials(user.fullName);
+
+    const first = (user.fullName || "Member").trim().split(/\s+/)[0];
+    const h = new Date().getHours();
+    const g = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+    document.getElementById("greetName").textContent = g + ", " + first;
+
+    document.getElementById("refLink").textContent = REF.length > 30 ? REF.slice(0, 30) + "…" : REF;
+
+    const pkgText = document.querySelector("#packageBtn .pkg-text");
+    const growthPill = document.getElementById("growthPill");
+    if (isActive()) {
+      pkgText.textContent = user.package_name || "Active Package";
+      growthPill.style.color = "#6ee7b7";
+      growthPill.innerHTML = "&uarr; " + (user.package === "apex" ? "APEX" : "STARTERKIT");
+    } else {
+      pkgText.textContent = "Activate Package";
+      growthPill.style.color = "#ff5b5b";
+      growthPill.innerHTML = "FREE";
+    }
+    document.getElementById("giftFab").style.display = isActive() ? "none" : "flex";
+
+    renderCurrency();
+    refreshWallets();
     renderTasks();
     renderShares();
     renderMusic();
@@ -563,6 +1753,20 @@
   }
 
   init();
+
+  // ── Global handlers ──
+  window.go = go;
+  window.openMenu = openMenu;
+  window.closeMenu = closeMenu;
+  window.logoutUser = logoutUser;
+  window.copyRef = copyRef;
+  window.shareRef = shareRef;
+  window.scrollToSection = scrollToSection;
+  window.quickAI = quickAI;
+  window.activateFab = activateFab;
+  window.toggleCurrency = toggleCurrency;
+  document.getElementById("menuBtn").addEventListener("click", openMenu);
+  document.getElementById("bellBtn").addEventListener("click", () => toast("No new notifications"));
 </script>
 </body>
 </html>

@@ -71,7 +71,7 @@ export function toast(msg) {
 // ── Bottom nav ──
 const NAV = [
   { to: "dashboard.html", label: "Home", icon: "home" },
-  { to: "withdraw.html", label: "Withdraw", icon: "withdraw" },
+  { to: "withdraw.html", label: "Wallet", icon: "withdraw" },
   { to: "profile.html", label: "Profile", icon: "profile" },
 ];
 
@@ -142,6 +142,11 @@ export async function openActivationPicker() {
   pickerEl.id = "incossifyPicker";
   pickerEl.innerHTML = `
     <div class="box">
+      <div style="display:flex;align-items:center;justify-content:flex-start;">
+        <button type="button" class="picker-back" id="pickerBackTop" aria-label="Back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+        </button>
+      </div>
       <div class="big" style="overflow:hidden;"><img src="assets/logo-CUooZ1Ch.png" alt="Incossify" style="width:100%;height:100%;object-fit:cover;border-radius:1rem;"></div>
       <h2>Choose your activation package</h2>
       <p>Pick a package to activate your account and start earning premium rewards.</p>
@@ -179,5 +184,7 @@ export async function openActivationPicker() {
       window.location.href = "payment.html";
     });
   });
-  pickerEl.querySelector("#pickerBack").addEventListener("click", () => pickerEl.remove());
+  [pickerEl.querySelector("#pickerBackTop"), pickerEl.querySelector("#pickerBack")].forEach(btn => {
+    if (btn) btn.addEventListener("click", () => pickerEl.remove());
+  });
 }
